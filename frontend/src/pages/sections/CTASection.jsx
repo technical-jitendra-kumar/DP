@@ -98,12 +98,19 @@ export default function CTASection() {
     boxShadow: focused === name ? "0 0 0 3px rgba(20,41,208,0.09)" : "none",
     transition: "all 0.2s ease",
     display: "block",
+    // Prevent zoom on iOS (font-size must be >= 16px to avoid auto-zoom)
+    fontSize: "16px",
   });
 
   return (
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&display=swap');
+
+        .dp-cta-section *,
+        .dp-cta-section *::before,
+        .dp-cta-section *::after { box-sizing: border-box; }
+
         @keyframes ctaScroll {
           0%   { transform: translateX(0); }
           100% { transform: translateX(-50%); }
@@ -122,12 +129,44 @@ export default function CTASection() {
           transform: translateY(-2px) !important;
           box-shadow: 0 8px 28px rgba(20,41,208,0.38) !important;
         }
-        @media (max-width: 900px) {
-          .dp-cta-grid { grid-template-columns: 1fr !important; }
+
+        /* ── Two-column layout ── */
+        .dp-cta-grid {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 40px;
+          display: grid;
+          grid-template-columns: 1.2fr 1fr;
+          gap: 64px;
+          align-items: center;
+          position: relative;
+          z-index: 1;
+        }
+
+        /* ── Tablet (≤1024px): stack columns ── */
+        @media (max-width: 1024px) {
+          .dp-cta-grid {
+            grid-template-columns: 1fr;
+            gap: 48px;
+            padding: 0 32px;
+          }
+        }
+
+        /* ── Mobile (≤600px) ── */
+        @media (max-width: 600px) {
+          .dp-cta-grid { padding: 0 16px; gap: 36px; }
+          .dp-cta-form-box { padding: 32px 20px !important; }
+          .dp-cta-phone-row { flex-direction: column !important; }
+          .dp-cta-phone-row select { width: 100% !important; }
+        }
+
+        /* ── Very small phones (≤380px) ── */
+        @media (max-width: 380px) {
+          .dp-cta-form-box { padding: 24px 16px !important; }
         }
       `}</style>
 
-      <section id="contact" style={{
+      <section id="contact" className="dp-cta-section" style={{
         padding: "90px 0",
         background: "#F5F7FA",
         position: "relative",
@@ -139,22 +178,7 @@ export default function CTASection() {
         <div style={{ position: "absolute", top: -60, right: -50, width: 380, height: 380, borderRadius: "50%", background: "radial-gradient(circle, rgba(20,41,208,0.07) 0%, transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
         <div style={{ position: "absolute", bottom: -60, left: -40, width: 300, height: 300, borderRadius: "50%", background: "radial-gradient(circle, rgba(14,127,221,0.06) 0%, transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
 
-        {/* Grid */}
-        <div
-          className="dp-cta-grid"
-          style={{
-            maxWidth: 1200,
-            margin: "0 auto",
-            padding: "0 40px",
-            display: "grid",
-            gridTemplateColumns: "1.2fr 1fr",
-            gap: "64px",
-            alignItems: "center",
-            position: "relative",
-            zIndex: 1,
-            boxSizing: "border-box",
-          }}
-        >
+        <div className="dp-cta-grid">
 
           {/* ── LEFT ── */}
           <div style={{ display: "flex", flexDirection: "column", gap: 24, minWidth: 0 }}>
@@ -164,7 +188,7 @@ export default function CTASection() {
               <span style={{ fontSize: "0.72rem", fontWeight: 700, color: "#1429D0", letterSpacing: "2px", textTransform: "uppercase" }}>Start Your Journey</span>
             </div>
 
-            <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.6rem)", fontWeight: 900, color: "#161619", lineHeight: 1.15, letterSpacing: "-0.03em", margin: 0 }}>
+            <h2 style={{ fontSize: "clamp(1.7rem, 3vw, 2.6rem)", fontWeight: 900, color: "#161619", lineHeight: 1.15, letterSpacing: "-0.03em", margin: 0 }}>
               Accelerate your career with industry-leading programs.{" "}
               <span style={{ color: "#1429D0" }}>Join 12,000+ professionals</span>{" "}
               who secured roles at <span style={{ color: "#1429D0" }}>top-tier companies</span>.
@@ -194,52 +218,78 @@ export default function CTASection() {
           </div>
 
           {/* ── RIGHT — FORM ── */}
-          <div style={{
-            background: "#F2F5FF",
-            borderRadius: 22,
-            padding: "60px 32px",
-            boxShadow: "0 8px 40px rgba(20,41,208,0.12)",
-            border: "1.5px solid rgba(20,41,208,0.12)",
-            boxSizing: "border-box",
-            minWidth: 0,
-          }}>
-            <h3 style={{ fontSize: "1.1rem", fontWeight: 800, color: "#161619", margin: "0 0 30px", textAlign: "center", lineHeight: 1.4 }}>
+          <div
+            className="dp-cta-form-box"
+            style={{
+              background: "#F2F5FF",
+              borderRadius: 22,
+              padding: "40px 32px",
+              boxShadow: "0 8px 40px rgba(20,41,208,0.12)",
+              border: "1.5px solid rgba(20,41,208,0.12)",
+              minWidth: 0,
+            }}
+          >
+            <h3 style={{ fontSize: "1.05rem", fontWeight: 800, color: "#161619", margin: "0 0 24px", textAlign: "center", lineHeight: 1.4 }}>
               Upgrade Your Skills to Achieve Your Dream Job
             </h3>
 
-            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 28 }}>
+            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 20 }}>
 
               <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
                 <label style={{ fontSize: "0.75rem", fontWeight: 600, color: "#262832" }}>Full Name</label>
-                <input type="text" name="fullName" placeholder="John Doe" value={formData.fullName} onChange={handleChange} onFocus={() => setFocused("fullName")} onBlur={() => setFocused(null)} required style={inputBase("fullName")} />
+                <input
+                  type="text" name="fullName" placeholder="John Doe"
+                  value={formData.fullName} onChange={handleChange}
+                  onFocus={() => setFocused("fullName")} onBlur={() => setFocused(null)}
+                  required style={inputBase("fullName")}
+                />
               </div>
 
               <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
                 <label style={{ fontSize: "0.75rem", fontWeight: 600, color: "#262832" }}>Email Address</label>
-                <input type="email" name="email" placeholder="abc@gmail.com" value={formData.email} onChange={handleChange} onFocus={() => setFocused("email")} onBlur={() => setFocused(null)} required style={inputBase("email")} />
+                <input
+                  type="email" name="email" placeholder="abc@gmail.com"
+                  value={formData.email} onChange={handleChange}
+                  onFocus={() => setFocused("email")} onBlur={() => setFocused(null)}
+                  required style={inputBase("email")}
+                />
               </div>
 
               <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
                 <label style={{ fontSize: "0.75rem", fontWeight: 600, color: "#262832" }}>Contact Number</label>
-                <div style={{ display: "flex", gap: 8 }}>
-                  <select name="countryCode" value={formData.countryCode} onChange={handleChange} onFocus={() => setFocused("cc")} onBlur={() => setFocused(null)} style={{ ...inputBase("cc"), width: 90, flexShrink: 0, cursor: "pointer" }}>
+                {/* dp-cta-phone-row: stacks to column on very small phones */}
+                <div className="dp-cta-phone-row" style={{ display: "flex", gap: 8 }}>
+                  <select
+                    name="countryCode" value={formData.countryCode} onChange={handleChange}
+                    onFocus={() => setFocused("cc")} onBlur={() => setFocused(null)}
+                    style={{ ...inputBase("cc"), width: 90, flexShrink: 0, cursor: "pointer" }}
+                  >
                     <option value="+91">IN +91</option>
                     <option value="+1">US +1</option>
                     <option value="+44">UK +44</option>
                     <option value="+86">CN +86</option>
                   </select>
-                  <input type="tel" name="phone" placeholder="81234 56789" value={formData.phone} onChange={handleChange} onFocus={() => setFocused("phone")} onBlur={() => setFocused(null)} required style={{ ...inputBase("phone"), flex: 1 }} />
+                  <input
+                    type="tel" name="phone" placeholder="81234 56789"
+                    value={formData.phone} onChange={handleChange}
+                    onFocus={() => setFocused("phone")} onBlur={() => setFocused(null)}
+                    required style={{ ...inputBase("phone"), flex: 1 }}
+                  />
                 </div>
               </div>
 
               <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
                 <label style={{ fontSize: "0.75rem", fontWeight: 600, color: "#262832" }}>Program Preference</label>
-                <select name="program" value={formData.program} onChange={handleChange} onFocus={() => setFocused("program")} onBlur={() => setFocused(null)} style={{ ...inputBase("program"), cursor: "pointer" }}>
+                <select
+                  name="program" value={formData.program} onChange={handleChange}
+                  onFocus={() => setFocused("program")} onBlur={() => setFocused(null)}
+                  style={{ ...inputBase("program"), cursor: "pointer" }}
+                >
                   <option>Not Sure Yet</option>
                   <option>Data Analytics</option>
                   <option>Business Analytics</option>
                   <option>Data Science and AI</option>
-                  <option>Agentic AI & Prompt Engineering</option>
+                  <option>Agentic AI &amp; Prompt Engineering</option>
                   <option>Investment Banking</option>
                 </select>
               </div>
@@ -247,7 +297,17 @@ export default function CTASection() {
               <button
                 type="submit"
                 className="dp-cta-submitbtn"
-                style={{ width: "100%", padding: "14px 20px", fontSize: "0.95rem", fontWeight: 700, fontFamily: "'DM Sans', sans-serif", color: "#fff", background: "#1429D0", border: "none", borderRadius: 10, cursor: "pointer", marginTop: 4, boxShadow: "0 4px 20px rgba(20,41,208,0.28)", transition: "all 0.22s ease" }}
+                style={{
+                  width: "100%", padding: "14px 20px",
+                  fontSize: "0.95rem", fontWeight: 700,
+                  fontFamily: "'DM Sans', sans-serif",
+                  color: "#fff", background: "#1429D0",
+                  border: "none", borderRadius: 10, cursor: "pointer",
+                  marginTop: 4, boxShadow: "0 4px 20px rgba(20,41,208,0.28)",
+                  transition: "all 0.22s ease",
+                  touchAction: "manipulation",
+                  WebkitTapHighlightColor: "transparent",
+                }}
               >
                 Book Free Counselling →
               </button>

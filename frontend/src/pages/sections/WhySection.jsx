@@ -176,37 +176,36 @@ export default function WhySection() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&display=swap');
 
+        .why-section *,
+        .why-section *::before,
+        .why-section *::after { box-sizing: border-box; }
+
         .why-section {
           font-family: 'DM Sans', sans-serif;
           background: #F5F7FA;
-          padding: 4rem 5%;
+          padding: 5rem 5%;
           position: relative;
           overflow: hidden;
         }
 
         .why-blob-tr {
           position: absolute;
-          top: 8%;
-          right: -6%;
-          width: 480px;
-          height: 480px;
+          top: 8%; right: -6%;
+          width: 480px; height: 480px;
           background: radial-gradient(circle, rgba(20,41,208,0.07) 0%, transparent 70%);
           border-radius: 50%;
-          pointer-events: none;
-          z-index: 0;
+          pointer-events: none; z-index: 0;
         }
         .why-blob-bl {
           position: absolute;
-          bottom: 5%;
-          left: -4%;
-          width: 320px;
-          height: 320px;
+          bottom: 5%; left: -4%;
+          width: 320px; height: 320px;
           background: radial-gradient(circle, rgba(14,127,221,0.06) 0%, transparent 70%);
           border-radius: 50%;
-          pointer-events: none;
-          z-index: 0;
+          pointer-events: none; z-index: 0;
         }
 
+        /* ── Two-column layout ── */
         .why-main-grid {
           position: relative;
           z-index: 1;
@@ -228,19 +227,19 @@ export default function WhySection() {
           margin-bottom: 1rem;
         }
         .why-label-line {
-          width: 22px;
-          height: 2px;
+          width: 22px; height: 2px;
           background: #1429D0;
           border-radius: 2px;
+          flex-shrink: 0;
         }
 
         .why-h2 {
-          font-size: clamp(2rem, 4vw, 3rem);
+          font-size: clamp(1.8rem, 4vw, 3rem);
           font-weight: 800;
           line-height: 1.1;
           letter-spacing: -0.03em;
           color: #161619;
-          margin-bottom: 1.4rem;
+          margin: 0 0 1.4rem;
         }
         .why-h2 span { color: #1429D0; }
 
@@ -249,9 +248,10 @@ export default function WhySection() {
           color: #36383e;
           line-height: 1.7;
           max-width: 520px;
-          margin-bottom: 3rem;
+          margin: 0 0 3rem;
         }
 
+        /* ── Feature grid — 2 cols on desktop, 1 on mobile ── */
         .why-features-grid {
           display: grid;
           grid-template-columns: 1fr 1fr;
@@ -259,8 +259,7 @@ export default function WhySection() {
         }
         .why-feature-item { transition: all 0.5s ease; }
         .why-feature-icon {
-          width: 40px;
-          height: 40px;
+          width: 40px; height: 40px;
           border-radius: 10px;
           background: rgba(20,41,208,0.09);
           display: flex;
@@ -269,6 +268,7 @@ export default function WhySection() {
           color: #1429D0;
           margin-bottom: 0.85rem;
           transition: background 0.2s;
+          flex-shrink: 0;
         }
         .why-feature-item:hover .why-feature-icon {
           background: #1429D0;
@@ -286,6 +286,7 @@ export default function WhySection() {
           line-height: 1.55;
         }
 
+        /* ── Right column ── */
         .why-right {
           display: flex;
           flex-direction: column;
@@ -345,6 +346,7 @@ export default function WhySection() {
           z-index: 1;
         }
 
+        /* ── Sub metrics — 3 cols always, shrink on small screens ── */
         .why-sub-metrics {
           display: grid;
           grid-template-columns: 1fr 1fr 1fr;
@@ -413,21 +415,49 @@ export default function WhySection() {
           font-weight: 600;
           color: #1429D0;
           transition: all 0.18s;
+          white-space: nowrap;
         }
         .why-trust-badge:hover {
           background: #1429D0;
           color: #fff;
         }
 
-        @media (max-width: 900px) {
-          .why-main-grid { grid-template-columns: 1fr !important; gap: 3.5rem !important; }
-          .why-section { padding: 5rem 5%; }
+        /* ── Tablet (768px – 1024px): stack columns ── */
+        @media (max-width: 1024px) {
+          .why-main-grid {
+            grid-template-columns: 1fr;
+            gap: 3rem;
+          }
+          .why-para { max-width: 100%; }
         }
-        @media (max-width: 540px) {
-          .why-features-grid { grid-template-columns: 1fr; gap: 1.2rem; }
-          .why-sub-metrics { grid-template-columns: 1fr 1fr 1fr; gap: 0.6rem; }
+
+        /* ── Small tablet (600px – 768px) ── */
+        @media (max-width: 768px) {
+          .why-section { padding: 4rem 5%; }
+          .why-features-grid { gap: 1.2rem; }
+          .why-metric-num { font-size: 3.4rem; }
+          .why-main-metric { padding: 2.2rem 1.5rem; }
+        }
+
+        /* ── Mobile (≤600px) ── */
+        @media (max-width: 600px) {
+          .why-section { padding: 3.5rem 4%; }
+          .why-features-grid { grid-template-columns: 1fr; gap: 1.1rem; }
+          .why-sub-metrics { gap: 0.6rem; }
           .why-sub-card { padding: 1rem 0.6rem; }
           .why-sub-num { font-size: 1.2rem; }
+          .why-sub-lbl { font-size: 0.65rem; }
+          .why-trust-card { padding: 1.25rem; }
+          .why-trust-badges { gap: 0.5rem; }
+          .why-trust-badge { font-size: 0.7rem; padding: 0.4rem 0.7rem; }
+        }
+
+        /* ── Very small phones (≤380px) ── */
+        @media (max-width: 380px) {
+          .why-sub-metrics { grid-template-columns: 1fr 1fr 1fr; }
+          .why-sub-num { font-size: 1.05rem; }
+          .why-sub-lbl { font-size: 0.6rem; letter-spacing: 0; }
+          .why-metric-num { font-size: 2.8rem; }
         }
       `}</style>
 

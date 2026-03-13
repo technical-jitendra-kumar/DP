@@ -3,9 +3,9 @@ import { Award, MonitorPlay, ShieldCheck, Headphones, GraduationCap } from 'luci
 
 const stats = [
   { num: "2,400+", label: "Alumni Placed" },
-  { num: "100%", label: "Placement Rate" },
-  { num: "180+", label: "Hiring Partners" },
-  { num: "4.9★", label: "Average Rating" },
+  { num: "100%",   label: "Placement Rate" },
+  { num: "180+",   label: "Hiring Partners" },
+  { num: "4.9★",   label: "Average Rating" },
 ];
 
 // ── Real brand SVG logos ──────────────────────────────────────────
@@ -78,7 +78,7 @@ const companies = [
   { Logo: LogoFlipkart,  bg: "#EFF6FF", border: "#2874F0" },
 ];
 
-// ── Right-side visual — exactly matches the reference image ───────
+// ── Right-side visual ─────────────────────────────────────────────
 function PlacementWall() {
   return (
     <div style={{ width: "100%", maxWidth: 480 }}>
@@ -95,7 +95,6 @@ function PlacementWall() {
         marginBottom: "0.75rem",
         animation: "flt4 5s ease-in-out infinite",
       }}>
-
         {/* Card 1 — Highest Package */}
         <div style={{
           background: "linear-gradient(145deg, #1e3eca 0%, #1e6fe0 100%)",
@@ -107,8 +106,7 @@ function PlacementWall() {
           minHeight: 170,
           justifyContent: "center",
         }}>
-          {/* Briefcase icon */}
-          <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
             <rect width="44" height="44" rx="10" fill="rgba(255,255,255,0.12)"/>
             <rect x="8" y="17" width="28" height="18" rx="3.5" fill="#F59E0B" opacity="0.9"/>
             <path d="M16 17V14a2 2 0 012-2h8a2 2 0 012 2v3" stroke="#fff" strokeWidth="1.8" fill="none" strokeLinecap="round"/>
@@ -134,14 +132,12 @@ function PlacementWall() {
           minHeight: 170,
           justifyContent: "center",
         }}>
-          {/* Calendar icon */}
-          <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
             <rect width="44" height="44" rx="10" fill="rgba(255,255,255,0.12)"/>
             <rect x="8" y="13" width="28" height="22" rx="3.5" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" strokeWidth="1.2"/>
             <rect x="8" y="13" width="28" height="8" rx="3.5" fill="rgba(255,255,255,0.2)"/>
             <line x1="16" y1="10" x2="16" y2="16" stroke="#fff" strokeWidth="2" strokeLinecap="round"/>
             <line x1="28" y1="10" x2="28" y2="16" stroke="#fff" strokeWidth="2" strokeLinecap="round"/>
-            {/* Grid dots */}
             {[0,1,2,3,4,5,6,7,8,9].map((n) => (
               <rect key={n} x={13 + (n % 5) * 5} y={25 + Math.floor(n / 5) * 5} width="2.5" height="2.5" rx="0.6" fill="rgba(255,255,255,0.7)"/>
             ))}
@@ -181,6 +177,7 @@ function PlacementWall() {
               border: `1.5px solid ${border}22`,
               minHeight: 46,
               transition: "transform 0.2s ease, box-shadow 0.2s ease",
+              overflow: "hidden",
             }}
               onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = `0 6px 18px ${border}33`; }}
               onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; }}
@@ -190,7 +187,6 @@ function PlacementWall() {
           ))}
         </div>
 
-        {/* Footer stat */}
         <div style={{
           marginTop: "0.8rem", padding: "0.6rem 0.85rem",
           background: "#F8F9FF", borderRadius: 9,
@@ -209,12 +205,12 @@ function PlacementWall() {
   );
 }
 
-// ── Main HeroSection (left side unchanged) ────────────────────────
+// ── Main HeroSection ──────────────────────────────────────────────
 export default function HeroSection() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&display=swap');
 
         :root {
           --primary: #1429D0;
@@ -230,10 +226,18 @@ export default function HeroSection() {
           --card-shadow: 0 8px 40px rgba(20,41,208,0.13);
         }
 
+        /* ── Base reset for hero ── */
+        .hero-section *,
+        .hero-section *::before,
+        .hero-section *::after {
+          box-sizing: border-box;
+        }
+
         .hero-section {
           min-height: 100vh;
           display: flex;
           align-items: center;
+          /* More top padding on mobile to clear the fixed navbar */
           padding: 120px 5% 60px;
           position: relative;
           overflow: hidden;
@@ -243,41 +247,45 @@ export default function HeroSection() {
 
         .hero-blob-1 {
           position: absolute;
-          top: -120px;
-          right: -80px;
-          width: 600px;
-          height: 600px;
+          top: -120px; right: -80px;
+          width: 600px; height: 600px;
           border-radius: 50%;
           background: radial-gradient(circle, rgba(20,41,208,0.10) 0%, transparent 70%);
-          pointer-events: none;
-          z-index: 0;
+          pointer-events: none; z-index: 0;
         }
         .hero-blob-2 {
           position: absolute;
-          bottom: -100px;
-          left: -60px;
-          width: 400px;
-          height: 400px;
+          bottom: -100px; left: -60px;
+          width: 400px; height: 400px;
           border-radius: 50%;
           background: radial-gradient(circle, rgba(14,127,221,0.09) 0%, transparent 70%);
-          pointer-events: none;
-          z-index: 0;
+          pointer-events: none; z-index: 0;
         }
         .hero-grid-overlay {
-          position: absolute;
-          inset: 0;
+          position: absolute; inset: 0;
           background-image:
             linear-gradient(rgba(20,41,208,0.04) 1px, transparent 1px),
             linear-gradient(90deg, rgba(20,41,208,0.04) 1px, transparent 1px);
           background-size: 48px 48px;
-          pointer-events: none;
-          z-index: 0;
+          pointer-events: none; z-index: 0;
         }
 
+        /* ── Two-column layout ── */
+        .hero-inner {
+          display: flex;
+          align-items: center;
+          gap: 4rem;
+          width: 100%;
+          position: relative;
+          z-index: 1;
+        }
+
+        /* ── Left content ── */
         .hero-content {
           position: relative;
           z-index: 1;
-          max-width: 700px;
+          flex: 1;
+          min-width: 0;
           animation: fadeUp 0.6s ease both;
         }
 
@@ -297,16 +305,15 @@ export default function HeroSection() {
           letter-spacing: 0.01em;
           animation: fadeUp 0.6s ease 0s both;
         }
-        .hero-badge svg { color: #1429D0; }
 
         .hero-h1 {
           font-family: 'DM Sans', sans-serif;
-          font-size: clamp(2.6rem, 5vw, 4.2rem);
+          font-size: clamp(2.2rem, 5vw, 4.2rem);
           font-weight: 900;
           line-height: 1.06;
           letter-spacing: -1.5px;
           color: #161619;
-          margin-bottom: 1.4rem;
+          margin: 0 0 1.4rem;
           animation: fadeUp 0.6s ease 0.1s both;
         }
         .hero-h1 .gradient-text {
@@ -321,7 +328,7 @@ export default function HeroSection() {
           line-height: 1.8;
           color: #36383e;
           max-width: 520px;
-          margin-bottom: 2.4rem;
+          margin: 0 0 2.4rem;
           animation: fadeUp 0.6s ease 0.2s both;
           font-weight: 400;
         }
@@ -346,8 +353,10 @@ export default function HeroSection() {
           transition: all 0.22s cubic-bezier(.4,0,.2,1);
           display: inline-flex;
           align-items: center;
+          justify-content: center;
           gap: 0.4rem;
           letter-spacing: 0.01em;
+          white-space: nowrap;
         }
         .btn-primary:hover {
           background: #0e1fb0;
@@ -369,7 +378,9 @@ export default function HeroSection() {
           transition: all 0.22s cubic-bezier(.4,0,.2,1);
           display: inline-flex;
           align-items: center;
+          justify-content: center;
           gap: 0.4rem;
+          white-space: nowrap;
         }
         .btn-secondary:hover {
           border-color: #1429D0;
@@ -398,17 +409,17 @@ export default function HeroSection() {
           box-shadow: 0 1px 6px rgba(20,41,208,0.07);
           backdrop-filter: blur(6px);
           transition: all 0.18s;
+          white-space: nowrap;
         }
         .hero-pill:hover {
           background: #F2F5FF;
           border-color: rgba(20,41,208,0.3);
           transform: translateY(-1px);
         }
-        .hero-pill svg { color: #1429D0; }
 
         .hero-stats {
           display: flex;
-          gap: 2.5rem;
+          gap: 2rem;
           margin-top: 3rem;
           flex-wrap: wrap;
           animation: fadeUp 0.6s ease 0.45s both;
@@ -435,24 +446,15 @@ export default function HeroSection() {
         .stat-item:not(:last-child)::after {
           content: '';
           position: absolute;
-          right: -1.25rem;
-          top: 10%;
-          height: 80%;
-          width: 1px;
+          right: -1rem;
+          top: 10%; height: 80%; width: 1px;
           background: rgba(20,41,208,0.12);
         }
 
-        .hero-inner {
-          display: flex;
-          align-items: center;
-          gap: 4rem;
-          width: 100%;
-          position: relative;
-          z-index: 1;
-        }
+        /* ── Right visual ── */
         .hero-visual {
           flex-shrink: 0;
-          width: 480px;
+          width: 460px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -463,19 +465,54 @@ export default function HeroSection() {
           to   { opacity: 1; transform: translateY(0); }
         }
 
-        @media (max-width: 900px) {
-          .hero-visual { display: none !important; }
-          .hero-section { padding: 100px 5% 50px; }
+        /* ── Tablet (768px – 1024px): stack visual below content ── */
+        @media (max-width: 1024px) {
+          .hero-inner {
+            flex-direction: column;
+            gap: 2.5rem;
+            align-items: flex-start;
+          }
+          .hero-visual {
+            width: 100%;
+            max-width: 520px;
+            align-self: center;
+          }
+          .hero-section {
+            padding: 110px 5% 60px;
+            min-height: auto;
+          }
           .hero-stats { gap: 1.5rem; }
-          .stat-item::after { display: none; }
-          .hero-inner { gap: 0; }
         }
 
-        @media (max-width: 600px) {
-          .hero-btns { flex-direction: column; }
-          .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
+        /* ── Small tablet / large phone (600px – 768px) ── */
+        @media (max-width: 768px) {
+          .hero-section { padding: 100px 5% 50px; }
+          .hero-h1 { letter-spacing: -1px; }
+          .hero-para { font-size: 0.98rem; margin-bottom: 2rem; }
+          .stat-item:not(:last-child)::after { display: none; }
           .hero-stats { gap: 1.2rem; }
+        }
+
+        /* ── Mobile (≤600px): full single column ── */
+        @media (max-width: 600px) {
+          .hero-section { padding: 90px 4% 48px; }
+          .hero-btns { flex-direction: column; }
+          .btn-primary,
+          .btn-secondary { width: 100%; }
           .hero-pills { gap: 0.4rem; }
+          .hero-stats { gap: 1rem; margin-top: 2rem; padding-top: 1.6rem; }
+          .stat-num { font-size: 1.7rem; }
+          /* Show the visual on mobile too but compact */
+          .hero-visual { max-width: 100%; }
+        }
+
+        /* ── Very small phones (≤400px) ── */
+        @media (max-width: 400px) {
+          .hero-section { padding: 85px 4% 40px; }
+          .hero-badge { font-size: 0.72rem; padding: 0.35rem 0.85rem; }
+          .btn-primary,
+          .btn-secondary { padding: 0.8rem 1.5rem; font-size: 0.92rem; }
+          .hero-pill { font-size: 0.74rem; padding: 0.35rem 0.75rem; }
         }
       `}</style>
 
@@ -485,7 +522,7 @@ export default function HeroSection() {
         <div className="hero-grid-overlay" />
 
         <div className="hero-inner">
-          {/* ── LEFT — untouched ── */}
+          {/* ── LEFT ── */}
           <div className="hero-content">
             <div className="hero-badge">
               <Award size={14} />
@@ -540,7 +577,7 @@ export default function HeroSection() {
             </div>
           </div>
 
-          {/* ── RIGHT — new layout matching reference image ── */}
+          {/* ── RIGHT ── */}
           <div className="hero-visual">
             <PlacementWall />
           </div>

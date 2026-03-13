@@ -27,31 +27,91 @@ export default function Footer() {
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&display=swap');
-        @media (max-width: 992px) {
-          .dp-footer-grid { grid-template-columns: 1.5fr 1fr 1fr !important; gap: 3rem 2rem !important; }
+
+        .dp-footer *,
+        .dp-footer *::before,
+        .dp-footer *::after { box-sizing: border-box; }
+
+        /* ── Desktop: 5-column layout ── */
+        .dp-footer-grid {
+          display: grid;
+          grid-template-columns: 1.8fr 1fr 1fr 1fr 0.8fr;
+          gap: 3rem;
+          max-width: 1200px;
+          margin: 0 auto;
+          align-items: start;
         }
+
+        /* ── Tablet (768px – 1024px): brand + 3 cols + social ── */
+        @media (max-width: 1024px) {
+          .dp-footer-grid {
+            grid-template-columns: 1.4fr 1fr 1fr 1fr;
+            gap: 2.5rem 2rem;
+          }
+          /* Social column wraps to new row alongside brand */
+          .dp-footer-social {
+            grid-column: 1;
+            grid-row: 2;
+          }
+        }
+
+        /* ── Small tablet (600px – 768px): 2-column ── */
+        @media (max-width: 768px) {
+          .dp-footer-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem 2rem;
+          }
+          .dp-footer-brand {
+            grid-column: 1 / -1; /* full width */
+          }
+          .dp-footer-social {
+            grid-column: auto;
+            grid-row: auto;
+          }
+        }
+
+        /* ── Mobile (≤480px): single column ── */
+        @media (max-width: 480px) {
+          .dp-footer-grid {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+          }
+          .dp-footer-brand {
+            grid-column: 1;
+          }
+        }
+
+        /* ── Bottom bar ── */
+        .dp-footer-bottom {
+          max-width: 1200px;
+          margin: 0 auto;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 0.75rem;
+        }
+
         @media (max-width: 600px) {
-          .dp-footer-grid { grid-template-columns: 1fr 1fr !important; }
-          .dp-footer-brand { grid-column: span 2 !important; }
+          .dp-footer-bottom {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+          }
         }
+
         .dp-footer-link:hover { color: #BFD2FF !important; }
         .dp-social-btn:hover  { color: #BFD2FF !important; transform: translateY(-3px) !important; }
       `}</style>
 
-      <footer style={{
+      <footer className="dp-footer" style={{
         background: "#161619",
         padding: "4rem 5% 2rem",
         borderTop: "1px solid rgba(255,255,255,0.07)",
         fontFamily: "'DM Sans', sans-serif",
       }}>
 
-        <div className="dp-footer-grid" style={{
-          display: "grid",
-          gridTemplateColumns: "1.8fr 1fr 1fr 1fr 0.8fr",
-          gap: "3rem",
-          maxWidth: 1200, margin: "0 auto",
-          alignItems: "start",
-        }}>
+        <div className="dp-footer-grid">
 
           {/* Brand column */}
           <div className="dp-footer-brand" style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
@@ -60,17 +120,17 @@ export default function Footer() {
               <span style={{ color: "#1429D0" }}>Preneur</span>
             </div>
 
-            <p style={{ fontSize: "0.88rem", color: "#94A3B8", lineHeight: 1.7, maxWidth: 270 }}>
+            <p style={{ fontSize: "0.88rem", color: "#94A3B8", lineHeight: 1.7, maxWidth: 270, margin: 0 }}>
               Empowering the next generation of data professionals and financial analysts across India with industry-led mentorship.
             </p>
 
             <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem", marginTop: "0.25rem" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "0.65rem", fontSize: "0.84rem", color: "#CBD5E1" }}>
-                <Mail size={13} color="#1429D0" />
+                <Mail size={13} color="#1429D0" style={{ flexShrink: 0 }} />
                 hello@datapreneur.in
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: "0.65rem", fontSize: "0.84rem", color: "#CBD5E1" }}>
-                <Phone size={13} color="#1429D0" />
+                <Phone size={13} color="#1429D0" style={{ flexShrink: 0 }} />
                 +91-98100-00000
               </div>
             </div>
@@ -105,7 +165,7 @@ export default function Footer() {
           ))}
 
           {/* Social column */}
-          <div>
+          <div className="dp-footer-social">
             <h4 style={{
               fontWeight: 700, fontSize: "0.75rem", color: "#fff",
               letterSpacing: "1.5px", textTransform: "uppercase",
@@ -146,11 +206,7 @@ export default function Footer() {
           borderTop: "1px solid rgba(255,255,255,0.06)",
           fontSize: "0.8rem", color: "#4B5563",
         }}>
-          <div style={{
-            maxWidth: 1200, margin: "0 auto",
-            display: "flex", justifyContent: "space-between", alignItems: "center",
-            flexWrap: "wrap", gap: "0.75rem",
-          }}>
+          <div className="dp-footer-bottom">
             <span>© 2025 DataPreneur Education Pvt. Ltd. All rights reserved.</span>
             <span style={{ display: "flex", alignItems: "center", gap: "0.4rem", color: "#6B7280" }}>
               <PinIcon /> Sector-62, Noida, Uttar Pradesh
