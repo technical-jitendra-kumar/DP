@@ -236,6 +236,25 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", h);
   }, []);
 
+  // Close mobile menu on resize to desktop
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 768) setMobileOpen(false);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [mobileOpen]);
+
   const open  = useCallback((lbl) => { clearTimeout(closeTimer.current); setOpenMenu(lbl); }, []);
   const close = useCallback(() => { closeTimer.current = setTimeout(() => setOpenMenu(null), 130); }, []);
   const stay  = useCallback(() => clearTimeout(closeTimer.current), []);
@@ -262,13 +281,30 @@ export default function Navbar() {
         }
         .dp-nav-btn-item:hover { color: ${B.primary} !important; border-bottom-color: ${B.primary} !important; }
 
-        /* ── Tablet: hide phone, shrink gaps ── */
+        /* ── Base: ensure no horizontal overflow ── */
+        * { box-sizing: border-box; }
+
+        /* ── Large desktop (1200px+): full layout ── */
+        .dp-nav-phone { display: flex !important; }
+        .dp-nav-signin { display: inline-flex !important; text-decoration: none; display: flex; align-items: center; }
+        .dp-hamburger { display: none !important; }
+        .dp-nav-center { display: flex !important; }
+
+        /* ── Tablet (768px – 1100px): hide phone number, shrink gaps ── */
         @media (max-width: 1100px) {
           .dp-nav-phone { display: none !important; }
-          .dp-nav-btn-item { padding: 0 0.6rem !important; font-size: 0.82rem !important; }
+          .dp-nav-btn-item { padding: 0 0.55rem !important; font-size: 0.81rem !important; }
+          .dp-nav-enroll { padding: 0.45rem 0.9rem !important; font-size: 0.8rem !important; }
+          .dp-nav-signin { padding: 0.4rem 0.75rem !important; font-size: 0.8rem !important; }
         }
 
-        /* ── Mobile: hide entire center nav, show hamburger ── */
+        /* ── Small tablet (768px – 900px): tighten further ── */
+        @media (max-width: 900px) {
+          .dp-nav-btn-item { padding: 0 0.4rem !important; font-size: 0.78rem !important; }
+          .dp-logo { font-size: 1.35rem !important; }
+        }
+
+        /* ── Mobile (≤768px): hide center nav, show hamburger ── */
         @media (max-width: 768px) {
           .dp-nav-center  { display: none !important; }
           .dp-nav-actions { gap: 0.4rem !important; }
@@ -276,15 +312,40 @@ export default function Navbar() {
           .dp-nav-signin  { display: none !important; }
           .dp-nav-enroll  { padding: 0.45rem 0.9rem !important; font-size: 0.8rem !important; }
           .dp-hamburger   { display: flex !important; }
-          .dp-logo        { font-size: 1.3rem !important; }
+          .dp-logo        { font-size: 1.25rem !important; }
+          .dp-nav-bar     { padding: 0 4% !important; }
         }
 
-        /* ── Mobile drawer: accordion sections ── */
+        /* ── Very small phones (≤380px) ── */
+        @media (max-width: 380px) {
+          .dp-logo        { font-size: 1.1rem !important; }
+          .dp-nav-enroll  { padding: 0.4rem 0.7rem !important; font-size: 0.75rem !important; }
+          .dp-nav-bar     { padding: 0 3% !important; }
+        }
+
+        /* ── Mobile drawer ── */
+        .dp-mobile-drawer {
+          background: #fff;
+          border-bottom: 1px solid ${B.border};
+          padding: 0.5rem 5% 1.5rem;
+          box-shadow: 0 8px 24px rgba(20,41,208,0.1);
+          /* Full height below navbar, scrollable */
+          position: fixed;
+          top: 66px;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          overflow-y: auto;
+          -webkit-overflow-scrolling: touch;
+          z-index: 999;
+        }
+
+        /* ── Mobile accordion sections ── */
         .dp-mobile-section-header {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          padding: 0.75rem 0;
+          padding: 0.85rem 0;
           cursor: pointer;
           border-bottom: 1px solid ${B.border};
           font-weight: 700;
@@ -292,56 +353,81 @@ export default function Navbar() {
           color: ${B.dark};
           font-family: 'DM Sans', sans-serif;
           user-select: none;
+          -webkit-tap-highlight-color: transparent;
         }
         .dp-mobile-section-header:hover { color: ${B.primary}; }
+
         .dp-mobile-link {
           display: flex;
           align-items: center;
           gap: 0.6rem;
-          padding: 0.6rem 0.75rem;
+          padding: 0.65rem 0.75rem;
           font-size: 0.85rem;
           color: ${B.body};
           border-radius: 8px;
           cursor: pointer;
           transition: background 0.15s;
           text-decoration: none;
+          -webkit-tap-highlight-color: transparent;
         }
-        .dp-mobile-link:hover { background: ${B.bg2}; color: ${B.primary}; }
+        .dp-mobile-link:hover,
+        .dp-mobile-link:active { background: ${B.bg2}; color: ${B.primary}; }
+
         .dp-mobile-course-link {
           display: flex;
           align-items: center;
           gap: 0.6rem;
-          padding: 0.5rem 0.75rem;
+          padding: 0.55rem 0.75rem;
           font-size: 0.84rem;
           color: ${B.primary};
           border-radius: 8px;
           text-decoration: none;
           transition: background 0.15s;
+          -webkit-tap-highlight-color: transparent;
         }
-        .dp-mobile-course-link:hover { background: ${B.bg2}; }
+        .dp-mobile-course-link:hover,
+        .dp-mobile-course-link:active { background: ${B.bg2}; }
+
+        /* ── Mega dropdown: tablet adjustments ── */
+        @media (max-width: 1100px) {
+          .dp-mega-sidebar { width: 200px !important; }
+          .dp-mega-courses-panel { padding: 1.2rem 1.5rem 1.5rem !important; }
+          .dp-why-grid { grid-template-columns: repeat(2, 1fr) !important; }
+        }
+
+        /* ── Safe area insets for notched phones ── */
+        @supports (padding: max(0px)) {
+          .dp-mobile-drawer {
+            padding-left: max(5%, env(safe-area-inset-left));
+            padding-right: max(5%, env(safe-area-inset-right));
+            padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+          }
+        }
       `}</style>
 
       <header style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 1000 }}>
         {/* ── Main bar ── */}
-        <nav style={{
-          display: "flex", alignItems: "center",
-          padding: "0 4%", height: 66,
-          background: scrolled ? "rgba(255,255,255,0.98)" : "rgba(255,255,255,0.94)",
-          backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
-          borderBottom: `1px solid ${scrolled ? "rgba(20,41,208,0.10)" : "rgba(20,41,208,0.06)"}`,
-          boxShadow: scrolled ? "0 4px 24px rgba(20,41,208,0.08)" : "0 2px 8px rgba(20,41,208,0.04)",
-          transition: "all 0.25s ease",
-        }}>
+        <nav
+          className="dp-nav-bar"
+          style={{
+            display: "flex", alignItems: "center",
+            padding: "0 4%", height: 66,
+            background: scrolled ? "rgba(255,255,255,0.98)" : "rgba(255,255,255,0.94)",
+            backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
+            borderBottom: `1px solid ${scrolled ? "rgba(20,41,208,0.10)" : "rgba(20,41,208,0.06)"}`,
+            boxShadow: scrolled ? "0 4px 24px rgba(20,41,208,0.08)" : "0 2px 8px rgba(20,41,208,0.04)",
+            transition: "all 0.25s ease",
+          }}>
 
           {/* Logo */}
-          <Link to="/" style={{ textDecoration: "none", flexShrink: 0, marginRight: "2.5rem" }}>
+          <Link to="/" style={{ textDecoration: "none", flexShrink: 0, marginRight: "2rem" }}>
             <span className="dp-logo" style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "1.6rem", fontWeight: 900, letterSpacing: "-0.04em", color: B.dark, userSelect: "none" }}>
               Data<span style={{ color: B.primary }}>Preneur</span>
             </span>
           </Link>
 
           {/* Center nav */}
-          <div className="dp-nav-center" style={{ display: "flex", alignItems: "stretch", flex: 1, height: "100%" }}>
+          <div className="dp-nav-center" style={{ display: "flex", alignItems: "stretch", flex: 1, height: "100%", minWidth: 0 }}>
             {MEGA_MENU.map((item) => {
               const isOpen = openMenu === item.label;
               return (
@@ -395,7 +481,7 @@ export default function Navbar() {
           </div>
 
           {/* Right actions */}
-          <div className="dp-nav-actions" style={{ display: "flex", alignItems: "center", gap: "0.65rem", flexShrink: 0 }}>
+          <div className="dp-nav-actions" style={{ display: "flex", alignItems: "center", gap: "0.65rem", flexShrink: 0, marginLeft: "auto" }}>
             <a href="tel:+919810000000" className="dp-nav-phone"
               style={{
                 display: "flex", alignItems: "center", gap: "0.35rem",
@@ -416,7 +502,8 @@ export default function Navbar() {
                 padding: "0.46rem 1.1rem", borderRadius: 8,
                 border: `1.5px solid rgba(20,41,208,0.18)`, background: "transparent",
                 color: B.heading, fontSize: "0.85rem", fontWeight: 600, cursor: "pointer",
-                fontFamily: "'DM Sans', sans-serif", transition: "all 0.2s",
+                fontFamily: "'DM Sans', sans-serif", transition: "all 0.2s", textDecoration: "none",
+                display: "flex", alignItems: "center",
               }}
               onMouseEnter={e => { e.currentTarget.style.borderColor = B.primary; e.currentTarget.style.color = B.primary; e.currentTarget.style.background = B.bg2; }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(20,41,208,0.18)"; e.currentTarget.style.color = B.heading; e.currentTarget.style.background = "transparent"; }}>
@@ -432,6 +519,7 @@ export default function Navbar() {
                 fontFamily: "'DM Sans', sans-serif",
                 transition: "all 0.22s cubic-bezier(.4,0,.2,1)",
                 boxShadow: "0 4px 14px rgba(20,41,208,0.28)",
+                whiteSpace: "nowrap",
               }}
               onMouseEnter={e => { e.currentTarget.style.background = B.hover; e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 8px 20px rgba(20,41,208,0.36)"; }}
               onMouseLeave={e => { e.currentTarget.style.background = B.primary; e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "0 4px 14px rgba(20,41,208,0.28)"; }}>
@@ -439,13 +527,13 @@ export default function Navbar() {
             </button>
 
             <button className="dp-hamburger" onClick={() => setMobileOpen(!mobileOpen)}
-              style={{ display: "none", background: "none", border: "none", cursor: "pointer", padding: "0.4rem", alignItems: "center", color: B.dark }}>
+              style={{ display: "none", background: "none", border: "none", cursor: "pointer", padding: "0.4rem", alignItems: "center", color: B.dark, flexShrink: 0, touchAction: "manipulation" }}>
               {mobileOpen ? <XIcon /> : <MenuIcon />}
             </button>
           </div>
         </nav>
 
-        {/* ── Mega dropdowns ── */}
+        {/* ── Mega dropdowns (desktop only) ── */}
         {MEGA_MENU.map((item) => {
           if (openMenu !== item.label) return null;
 
@@ -461,7 +549,7 @@ export default function Navbar() {
                 padding: "1.75rem 5%",
                 animation: "dropdownIn 0.18s ease",
               }}>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "0.75rem", maxWidth: 820 }}>
+                <div className="dp-why-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "0.75rem", maxWidth: 820 }}>
                   {item.links.map((lnk, i) => (
                     <div key={i}
                       style={{ display: "flex", gap: "0.75rem", alignItems: "flex-start", padding: "0.85rem 1rem", borderRadius: 12, cursor: "pointer", transition: "all 0.15s", border: "1.5px solid transparent" }}
@@ -495,7 +583,7 @@ export default function Navbar() {
               display: "flex", animation: "dropdownIn 0.18s ease", minHeight: 340,
             }}>
               {/* Sidebar */}
-              <div style={{ width: 240, flexShrink: 0, background: B.bg1, borderRight: `1px solid ${B.border}`, padding: "1.5rem 0" }}>
+              <div className="dp-mega-sidebar" style={{ width: 240, flexShrink: 0, background: B.bg1, borderRight: `1px solid ${B.border}`, padding: "1.5rem 0" }}>
                 <div style={{ padding: "0 1.5rem 0.75rem", fontSize: "0.68rem", fontWeight: 700, letterSpacing: "2px", textTransform: "uppercase", color: "#94A3B8", fontFamily: "'DM Sans', sans-serif" }}>
                   Categories
                 </div>
@@ -535,7 +623,7 @@ export default function Navbar() {
               </div>
 
               {/* Courses panel */}
-              <div style={{ flex: 1, padding: "1.5rem 2.5rem 2rem" }}>
+              <div className="dp-mega-courses-panel" style={{ flex: 1, padding: "1.5rem 2.5rem 2rem", minWidth: 0, overflowY: "auto" }}>
                 <div style={{ marginBottom: "1.2rem" }}>
                   <div style={{ fontSize: "0.68rem", fontWeight: 700, letterSpacing: "2px", textTransform: "uppercase", color: "#94A3B8", marginBottom: "0.25rem", fontFamily: "'DM Sans', sans-serif" }}>
                     {currentCat.label}
@@ -545,7 +633,7 @@ export default function Navbar() {
                   </div>
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(210px, 1fr))", gap: "0.9rem" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: "0.9rem" }}>
                   {currentCat.courses.map((course) => (
                     <Link key={course.slug} to={`/programs/${course.slug}`} style={{ textDecoration: "none" }} onClick={() => setOpenMenu(null)}>
                       <div
@@ -571,7 +659,7 @@ export default function Navbar() {
                 </div>
 
                 {/* CTA banner */}
-                <div style={{ marginTop: "1.4rem", padding: "1rem 1.4rem", background: `linear-gradient(135deg, ${B.bg2}, #ede9fe)`, borderRadius: 12, border: `1px solid ${B.accentLt}`, display: "flex", alignItems: "center", justifyContent: "space-between", gap: "1rem" }}>
+                <div style={{ marginTop: "1.4rem", padding: "1rem 1.4rem", background: `linear-gradient(135deg, ${B.bg2}, #ede9fe)`, borderRadius: 12, border: `1px solid ${B.accentLt}`, display: "flex", alignItems: "center", justifyContent: "space-between", gap: "1rem", flexWrap: "wrap" }}>
                   <div>
                     <div style={{ fontWeight: 700, fontSize: "0.88rem", color: B.dark, fontFamily: "'DM Sans', sans-serif" }}>Need Help Choosing?</div>
                     <div style={{ fontSize: "0.77rem", color: "#64748B", marginTop: "0.15rem", fontFamily: "'DM Sans', sans-serif" }}>Book a free 30-min career counselling session with our experts.</div>
@@ -589,7 +677,7 @@ export default function Navbar() {
 
         {/* ── Mobile nav drawer ── */}
         {mobileOpen && (
-          <div style={{ background: "#fff", borderBottom: `1px solid ${B.border}`, padding: "0.5rem 5% 1.25rem", boxShadow: "0 8px 24px rgba(20,41,208,0.1)", maxHeight: "82vh", overflowY: "auto" }}>
+          <div className="dp-mobile-drawer">
 
             {/* Mega menu sections as accordions */}
             {MEGA_MENU.map((item) => (
@@ -639,10 +727,25 @@ export default function Navbar() {
 
             {/* CTA buttons */}
             <div style={{ display: "flex", gap: "0.75rem", marginTop: "1.25rem", paddingTop: "1rem", borderTop: `1px solid ${B.border}` }}>
-              <Link to="/signin" style={{ flex: 1, padding: "0.72rem", borderRadius: 8, border: `1.5px solid ${B.border}`, background: "transparent", color: B.dark, fontWeight: 600, cursor: "pointer", fontFamily: "'DM Sans', sans-serif", fontSize: "0.88rem" }}>
+              <Link to="/signin" style={{
+                flex: 1, padding: "0.72rem", borderRadius: 8,
+                border: `1.5px solid ${B.border}`, background: "transparent",
+                color: B.dark, fontWeight: 600, cursor: "pointer",
+                fontFamily: "'DM Sans', sans-serif", fontSize: "0.88rem",
+                textDecoration: "none", textAlign: "center", display: "flex",
+                alignItems: "center", justifyContent: "center",
+              }}>
                 Sign In
               </Link>
-              <Link to="/signup" style={{ flex: 1, padding: "0.72rem", borderRadius: 8, border: "none", background: B.primary, color: "#fff", fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', sans-serif", fontSize: "0.88rem", boxShadow: "0 4px 14px rgba(20,41,208,0.28)" }}>
+              <Link to="/signup" style={{
+                flex: 1, padding: "0.72rem", borderRadius: 8,
+                border: "none", background: B.primary, color: "#fff",
+                fontWeight: 700, cursor: "pointer",
+                fontFamily: "'DM Sans', sans-serif", fontSize: "0.88rem",
+                boxShadow: "0 4px 14px rgba(20,41,208,0.28)",
+                textDecoration: "none", textAlign: "center", display: "flex",
+                alignItems: "center", justifyContent: "center",
+              }}>
                 Enroll Now
               </Link>
             </div>
