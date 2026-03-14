@@ -174,11 +174,6 @@ const BrandIcon = ({ name, size = 36 }) => {
         <path fill="#fff" d="M12 4L4 20h4l1.5-3.5h5L16 20h4L12 4zm0 5l1.8 4.5h-3.6L12 9z"/>
       </svg>
     ),
-    Accenture: (
-      <svg width={s} height={s} viewBox="0 0 24 24">
-        <path fill="#A100FF" d="M16.5 12L24 0H9l7.5 12zM7.5 24L0 12l7.5-12L15 12z"/>
-      </svg>
-    ),
     "Booking.com": (
       <svg width={s} height={s} viewBox="0 0 24 24">
         <rect width="24" height="24" rx="3" fill="#003580"/>
@@ -249,9 +244,9 @@ const BrandIcon = ({ name, size = 36 }) => {
     ),
   };
 
-  // Fallback: colored initial badge
+  // Fallback: brand-blue initial badge
   const fallback = () => {
-    const palette = ["#1429D0","#0E7FDD","#1E3A8A","#262832"];
+    const palette = ["#1429D0", "#0E7FDD", "#1E3A8A", "#262832"];
     const bg = palette[name.charCodeAt(0) % palette.length];
     const initials = name.split(" ").map(w => w[0]).slice(0, 2).join("").toUpperCase();
     return (
@@ -282,33 +277,33 @@ function CompanyCard({ company }) {
         display: "inline-flex", alignItems: "center", gap: "0.85rem",
         background: hov ? "#fff" : "rgba(255,255,255,0.92)",
         border: `1.5px solid ${hov ? "rgba(20,41,208,0.35)" : "rgba(20,41,208,0.12)"}`,
-        borderRadius: 14, padding: "0.8rem 1.2rem",
+        borderRadius: 14, padding: "0.75rem 1.1rem",
         marginRight: "0.85rem", flexShrink: 0,
         cursor: "pointer", transition: "all .22s ease",
         transform: hov ? "translateY(-4px)" : "none",
         boxShadow: hov
           ? "0 12px 32px rgba(20,41,208,0.14), 0 2px 8px rgba(0,0,0,0.06)"
           : "0 2px 8px rgba(20,41,208,0.06)",
-        minWidth: 200,
+        minWidth: 165,
       }}
     >
       <div style={{
-        width: 44, height: 44, borderRadius: 10,
+        width: 40, height: 40, borderRadius: 10,
         background: "#fff", border: "1px solid rgba(20,41,208,0.10)",
         display: "flex", alignItems: "center", justifyContent: "center",
         flexShrink: 0, overflow: "hidden",
         boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
       }}>
-        <BrandIcon name={company.name} size={44} />
+        <BrandIcon name={company.name} size={40} />
       </div>
       <div>
         <div style={{
           fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
-          fontSize: "0.88rem", color: "#161619",
+          fontSize: "0.86rem", color: "#161619",
           lineHeight: 1.3, whiteSpace: "nowrap",
         }}>{company.name}</div>
         <div style={{
-          fontSize: "0.72rem", color: "#36383e",
+          fontSize: "0.71rem", color: "#36383e",
           marginTop: "0.15rem", whiteSpace: "nowrap", fontWeight: 500,
         }}>{company.role}</div>
       </div>
@@ -328,15 +323,13 @@ export default function HiringPartners() {
 
         .hp-section {
           background: #ffffff;
-          padding: 6rem 0 5.5rem;
+          padding: 5rem 0 4.5rem;
           overflow: hidden;
           position: relative;
           border-top: 1px solid rgba(20,41,208,0.08);
           border-bottom: 1px solid rgba(20,41,208,0.08);
           font-family: 'DM Sans', sans-serif;
         }
-
-        /* Blobs — no grid */
         .hp-blob-tl {
           position: absolute; top: -60px; left: -60px;
           width: 360px; height: 360px; border-radius: 50%;
@@ -349,75 +342,73 @@ export default function HiringPartners() {
           background: radial-gradient(circle, rgba(14,127,221,0.06) 0%, transparent 70%);
           pointer-events: none;
         }
-
-        /* Edge fades */
         .hp-fade-left {
-          position: absolute; top: 0; bottom: 0; left: 0; width: 180px;
+          position: absolute; top: 0; bottom: 0; left: 0; width: 120px;
           background: linear-gradient(90deg, rgba(255,255,255,0.98), transparent);
           pointer-events: none; z-index: 3;
         }
         .hp-fade-right {
-          position: absolute; top: 0; bottom: 0; right: 0; width: 180px;
+          position: absolute; top: 0; bottom: 0; right: 0; width: 120px;
           background: linear-gradient(270deg, rgba(255,255,255,0.98), transparent);
           pointer-events: none; z-index: 3;
         }
-
-        /* Header */
         .hp-header {
-          text-align: center; margin-bottom: 3.5rem;
+          text-align: center; margin-bottom: 3rem;
           position: relative; z-index: 4; padding: 0 5%;
         }
         .hp-label-row {
           display: flex; align-items: center; justify-content: center;
           gap: 12px; margin-bottom: 14px;
         }
-        .hp-label-line { width: 22px; height: 2px; background: #1429D0; border-radius: 2px; }
+        .hp-label-line { width: 22px; height: 2px; background: #1429D0; border-radius: 2px; display: inline-block; }
         .hp-label { color: #1429D0; font-size: 0.72rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
-
         .hp-heading {
-          font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 900;
-          color: #161619; letter-spacing: -0.03em;
-          line-height: 1.1; margin-bottom: 0.9rem;
+          font-size: clamp(1.7rem, 4vw, 2.8rem); font-weight: 900;
+          color: #161619; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 0.9rem;
         }
         .hp-heading span {
           background: linear-gradient(135deg, #1429D0, #0E7FDD);
-          -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-          background-clip: text;
+          -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
-        .hp-subtext {
-          font-size: 1rem; color: #36383e;
-          line-height: 1.7; max-width: 500px; margin: 0 auto;
-        }
-
-        /* Carousel */
-        .hp-carousel-wrap {
-          position: relative; z-index: 4;
-        }
-        .hp-row {
-          overflow: hidden;
-          margin-bottom: 0.85rem;
-        }
+        .hp-subtext { font-size: 0.95rem; color: #36383e; line-height: 1.7; max-width: 500px; margin: 0 auto; }
+        .hp-carousel-wrap { position: relative; z-index: 4; }
+        .hp-row { overflow: hidden; margin-bottom: 0.85rem; }
         .hp-row:last-child { margin-bottom: 0; }
 
-        @keyframes marqueeLeft {
-          from { transform: translateX(0); }
-          to   { transform: translateX(-50%); }
-        }
-        @keyframes marqueeRight {
-          from { transform: translateX(-50%); }
-          to   { transform: translateX(0); }
-        }
-        .hp-track {
-          display: flex; width: max-content; padding-left: 0.85rem;
-        }
+        @keyframes marqueeLeft  { from { transform: translateX(0);    } to { transform: translateX(-50%); } }
+        @keyframes marqueeRight { from { transform: translateX(-50%); } to { transform: translateX(0);    } }
+        .hp-track { display: flex; width: max-content; padding-left: 0.85rem; }
 
-        /* Stat strip */
         .hp-stat-strip {
-          text-align: center; margin-top: 3rem;
-          font-size: 0.9rem; color: #36383e;
-          position: relative; z-index: 4;
+          text-align: center; margin-top: 2.5rem;
+          font-size: 0.88rem; color: #36383e;
+          position: relative; z-index: 4; padding: 0 5%; line-height: 2;
         }
         .hp-stat-strip strong { color: #1429D0; font-weight: 700; }
+
+        /* ── Tablet (≤ 768px) ── */
+        @media (max-width: 768px) {
+          .hp-section    { padding: 4rem 0 3.5rem; }
+          .hp-heading    { font-size: clamp(1.5rem, 5vw, 2rem); }
+          .hp-subtext    { font-size: 0.88rem; }
+          .hp-fade-left, .hp-fade-right { width: 60px; }
+          .hp-stat-strip { font-size: 0.82rem; }
+          .hp-blob-tl, .hp-blob-br { width: 200px; height: 200px; }
+          .hp-header     { margin-bottom: 2.2rem; }
+        }
+
+        /* ── Mobile (≤ 480px) ── */
+        @media (max-width: 480px) {
+          .hp-section    { padding: 3rem 0 2.5rem; }
+          .hp-header     { margin-bottom: 1.8rem; }
+          .hp-heading    { font-size: 1.4rem; letter-spacing: -0.02em; }
+          .hp-subtext    { font-size: 0.82rem; max-width: 88%; }
+          .hp-label      { font-size: 0.65rem; letter-spacing: 1.5px; }
+          .hp-fade-left, .hp-fade-right { width: 36px; }
+          .hp-row        { margin-bottom: 0.6rem; }
+          .hp-stat-strip { font-size: 0.76rem; margin-top: 1.6rem; }
+          .hp-blob-tl, .hp-blob-br { display: none; }
+        }
       `}</style>
 
       <section id="hiring-partners" ref={ref} className="hp-section">

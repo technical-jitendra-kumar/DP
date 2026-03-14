@@ -73,7 +73,7 @@ function StoryCard({ story, id }) {
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
       style={{
-        flex: "0 0 290px",
+        flex: "0 0 280px",
         backgroundColor: "#fff",
         borderRadius: "20px",
         overflow: "hidden",
@@ -96,21 +96,26 @@ function StoryCard({ story, id }) {
         {/* Dark overlay */}
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 40%, rgba(22,22,25,0.55) 100%)" }} />
 
-        {/* Play btn */}
+        {/* Play btn — FIX: single transform value, no duplicate key */}
         <div
           className="play-btn"
           style={{
-            position: "absolute", top: "50%", left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: "52px", height: "52px",
-            backgroundColor: hov ? "#1429D0" : "rgba(20,41,208,0.82)",
-            borderRadius: "50%",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            boxShadow: "0 4px 20px rgba(20,41,208,0.45)",
-            transition: "all 0.25s ease",
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            /* ✅ Single transform — combines translate + scale in one value */
             transform: hov
               ? "translate(-50%, -50%) scale(1.12)"
               : "translate(-50%, -50%) scale(1)",
+            width: "52px",
+            height: "52px",
+            backgroundColor: hov ? "#1429D0" : "rgba(20,41,208,0.82)",
+            borderRadius: "50%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            boxShadow: "0 4px 20px rgba(20,41,208,0.45)",
+            transition: "all 0.25s ease",
           }}
         >
           <Play size={20} color="#fff" fill="#fff" />
@@ -189,6 +194,10 @@ export default function SuccessStoriesSection() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&display=swap');
 
+        .success-section *,
+        .success-section *::before,
+        .success-section *::after { box-sizing: border-box; }
+
         .success-section {
           padding: 90px 0;
           background: #F5F7FA;
@@ -197,7 +206,6 @@ export default function SuccessStoriesSection() {
           font-family: 'DM Sans', sans-serif;
         }
 
-        /* Blobs only — no grid */
         .success-blob-tl {
           position: absolute; top: -60px; left: -40px;
           width: 340px; height: 340px; border-radius: 50%;
@@ -211,10 +219,10 @@ export default function SuccessStoriesSection() {
           pointer-events: none;
         }
 
-        /* Header */
+        /* ── Header ── */
         .success-header {
           text-align: center;
-          margin-bottom: 56px;
+          margin-bottom: 48px;
           padding: 0 5%;
           position: relative;
           z-index: 1;
@@ -235,10 +243,10 @@ export default function SuccessStoriesSection() {
           margin-bottom: 18px;
         }
         .success-heading {
-          font-size: clamp(2rem, 4vw, 2.8rem);
+          font-size: clamp(1.8rem, 4vw, 2.8rem);
           font-weight: 900;
           color: #161619;
-          margin-bottom: 14px;
+          margin: 0 0 14px;
           letter-spacing: -0.03em;
           line-height: 1.1;
         }
@@ -251,7 +259,7 @@ export default function SuccessStoriesSection() {
           line-height: 1.7;
         }
 
-        /* Scroll track */
+        /* ── Scroll track ── */
         .success-scroll-wrap {
           position: relative;
           overflow: hidden;
@@ -260,33 +268,44 @@ export default function SuccessStoriesSection() {
           display: flex;
           gap: 22px;
           width: fit-content;
-          padding: 12px 0 20px;
-          animation: scrollRight 40s linear infinite;
+          padding: 12px 24px 20px;
+          animation: successScroll 40s linear infinite;
           will-change: transform;
         }
+        /* Pause on hover (desktop) and on touch hold (mobile handled by JS if needed) */
         .success-scroll-wrap:hover .success-scroll-track {
           animation-play-state: paused;
         }
 
-        @keyframes scrollRight {
+        @keyframes successScroll {
           0%   { transform: translateX(0); }
           100% { transform: translateX(-50%); }
         }
 
-        /* Edge fades — match section bg */
+        /* Edge fades */
         .success-fade-left {
-          position: absolute; left: 0; top: 0; bottom: 0; width: 120px;
+          position: absolute; left: 0; top: 0; bottom: 0; width: 80px;
           background: linear-gradient(90deg, #F5F7FA, transparent);
           pointer-events: none; z-index: 10;
         }
         .success-fade-right {
-          position: absolute; right: 0; top: 0; bottom: 0; width: 120px;
+          position: absolute; right: 0; top: 0; bottom: 0; width: 80px;
           background: linear-gradient(270deg, #F5F7FA, transparent);
           pointer-events: none; z-index: 10;
         }
 
-        @media (max-width: 600px) {
-          .success-section { padding: 60px 0; }
+        /* ── Mobile ── */
+        @media (max-width: 768px) {
+          .success-section { padding: 70px 0; }
+          .success-header { margin-bottom: 36px; }
+          /* Narrower fades on mobile so more card is visible */
+          .success-fade-left,
+          .success-fade-right { width: 40px; }
+        }
+
+        @media (max-width: 480px) {
+          .success-section { padding: 56px 0; }
+          .success-desc { font-size: 0.92rem; }
         }
       `}</style>
 
@@ -312,12 +331,10 @@ export default function SuccessStoriesSection() {
           <div className="success-fade-left" />
           <div className="success-fade-right" />
 
-          <div className="success-scroll-track" style={{ paddingLeft: "24px" }}>
-            {/* First set */}
+          <div className="success-scroll-track">
             {storiesData.map((story) => (
               <StoryCard key={`${story.id}-1`} story={story} id={`${story.id}-1`} />
             ))}
-            {/* Duplicate for seamless loop */}
             {storiesData.map((story) => (
               <StoryCard key={`${story.id}-2`} story={story} id={`${story.id}-2`} />
             ))}

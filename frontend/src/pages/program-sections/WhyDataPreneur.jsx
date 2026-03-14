@@ -127,12 +127,28 @@ export default function WhyDataPreneur({ course }) {
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&display=swap');
+        /* ── Tablet (≤ 900px) ── */
         @media (max-width: 900px) {
           .dp-why-layout { grid-template-columns: 1fr !important; gap: 3rem !important; }
-          .dp-why-stats  { grid-template-columns: 1fr 1fr !important; }
+          .dp-why-stats  { grid-template-columns: 1fr 1fr !important; gap: 1.5rem !important; padding: 2rem !important; }
+          .dp-why-whydp  { grid-template-columns: 1fr 1fr !important; }
         }
-        @media (max-width: 540px) {
-          .dp-why-stats { grid-template-columns: 1fr 1fr !important; }
+
+        /* ── Large mobile (≤ 640px) ── */
+        @media (max-width: 640px) {
+          .dp-why-section   { padding: 60px 5% !important; }
+          .dp-why-stats     { margin-top: 3.5rem !important; padding: 1.6rem 1.4rem !important; gap: 1.2rem !important; }
+          .dp-why-whydp     { grid-template-columns: 1fr 1fr !important; gap: 0.75rem !important; }
+          .dp-why-stat-num  { font-size: 2rem !important; }
+          .dp-why-stat-lbl  { font-size: 0.75rem !important; }
+        }
+
+        /* ── Small mobile (≤ 400px) ── */
+        @media (max-width: 400px) {
+          .dp-why-section  { padding: 48px 4% !important; }
+          .dp-why-stats    { grid-template-columns: 1fr 1fr !important; padding: 1.3rem 1rem !important; gap: 1rem !important; border-radius: 16px !important; }
+          .dp-why-whydp    { grid-template-columns: 1fr !important; }
+          .dp-why-stat-num { font-size: 1.75rem !important; }
         }
         .dp-why-cta:hover {
           transform: translateY(-2px) !important;
@@ -141,7 +157,7 @@ export default function WhyDataPreneur({ course }) {
         }
       `}</style>
 
-      <section ref={ref} style={{
+      <section ref={ref} className="dp-why-section" style={{
         padding: "90px 5%",
         position: "relative", overflow: "hidden",
         background: "#ffffff",
@@ -190,7 +206,7 @@ export default function WhyDataPreneur({ course }) {
 
               {/* Program-specific why points */}
               {course.whyDP && (
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "2rem" }}>
+              <div className="dp-why-whydp" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "2rem" }}>
                   {course.whyDP.map((w, i) => (
                     <div key={i} style={{
                       background: "#F5F7FA", borderRadius: 16, padding: "1.2rem",
@@ -261,13 +277,13 @@ export default function WhyDataPreneur({ course }) {
                 <div style={{ display: "flex", justifyContent: "center", marginBottom: "0.5rem" }}>
                   {StatIcons[i]}
                 </div>
-                <div style={{
+                <div className="dp-why-stat-num" style={{
                   fontSize: "2.5rem", fontWeight: 900, color: "#fff",
                   lineHeight: 1, letterSpacing: "-0.04em",
                 }}>
                   <AnimNum target={s.num} inView={inViewStats} />{s.suffix}
                 </div>
-                <div style={{ fontSize: "0.82rem", color: "rgba(191,210,255,0.75)", marginTop: "0.3rem" }}>{s.label}</div>
+                <div className="dp-why-stat-lbl" style={{ fontSize: "0.82rem", color: "rgba(191,210,255,0.75)", marginTop: "0.3rem" }}>{s.label}</div>
               </div>
             ))}
           </div>

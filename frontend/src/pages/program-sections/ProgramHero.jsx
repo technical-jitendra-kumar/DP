@@ -20,11 +20,18 @@ export default function ProgramHero({ course }) {
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&display=swap');
         @keyframes heroBlob1 { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-30px) scale(1.05)} }
         @keyframes heroBlob2 { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(20px) scale(.95)} }
-        @media (max-width: 960px) { .dp-hero-layout { grid-template-columns: 1fr !important; } }
-        @media (max-width: 600px) {
-          .dp-hero-ctas { flex-direction: column !important; }
-          .dp-hero-stats { gap: 1.5rem !important; }
+
+        /* Grid overlay — matches main HeroSection */
+        .dp-ph-grid {
+          position: absolute; inset: 0; pointer-events: none; z-index: 0;
+          background-image:
+            linear-gradient(rgba(20,41,208,0.055) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(20,41,208,0.055) 1px, transparent 1px);
+          background-size: 48px 48px;
+          mask-image: radial-gradient(ellipse 90% 90% at 50% 0%, black 40%, transparent 100%);
+          -webkit-mask-image: radial-gradient(ellipse 90% 90% at 50% 0%, black 40%, transparent 100%);
         }
+
         .dp-hero-enroll-btn:hover {
           transform: translateY(-3px) !important;
           box-shadow: 0 14px 36px rgba(20,41,208,0.42) !important;
@@ -36,9 +43,31 @@ export default function ProgramHero({ course }) {
         }
         .dp-hero-card-enroll:hover { transform: translateY(-2px) !important; }
         .dp-hero-card-counsel:hover { background: #e8eeff !important; }
+
+        /* ── Tablet (≤ 960px) ── */
+        @media (max-width: 960px) {
+          .dp-hero-layout { grid-template-columns: 1fr !important; }
+          .dp-ph-right-card { max-width: 480px; margin: 0 auto; width: 100%; }
+        }
+
+        /* ── Large mobile (≤ 640px) ── */
+        @media (max-width: 640px) {
+          .dp-hero-ctas { flex-direction: column !important; }
+          .dp-hero-ctas button { width: 100%; }
+          .dp-hero-stats { gap: 1.5rem !important; flex-wrap: wrap !important; }
+          .dp-ph-section { padding: 100px 5% 60px !important; }
+          .dp-ph-breadcrumb { margin-bottom: 1.4rem !important; }
+        }
+
+        /* ── Small mobile (≤ 400px) ── */
+        @media (max-width: 400px) {
+          .dp-ph-section { padding: 88px 4% 48px !important; }
+          .dp-hero-stats { gap: 1.2rem !important; }
+          .dp-ph-right-card { padding: 1.5rem !important; }
+        }
       `}</style>
 
-      <section style={{
+      <section className="dp-ph-section" style={{
         minHeight: "100vh",
         display: "flex", flexDirection: "column", justifyContent: "center",
         padding: "120px 5% 80px",
@@ -46,6 +75,9 @@ export default function ProgramHero({ course }) {
         background: "linear-gradient(160deg, #F2F5FF 0%, #F5F7FA 60%, #ffffff 100%)",
         fontFamily: "'DM Sans', sans-serif",
       }}>
+
+        {/* ── Grid overlay ── */}
+        <div className="dp-ph-grid" />
 
         {/* ── Blobs only — no grid ── */}
         <div style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 0 }}>
@@ -75,9 +107,7 @@ export default function ProgramHero({ course }) {
         <div style={{ position: "relative", zIndex: 1 }}>
 
           {/* Breadcrumb */}
-          <div style={{
-            display: "flex", alignItems: "center", gap: "0.5rem",
-            marginBottom: "2rem", fontSize: "0.82rem",
+          <div className="dp-ph-breadcrumb" style={{
             opacity: visible ? 1 : 0,
             transform: visible ? "none" : "translateY(10px)",
             transition: "all 0.4s ease",
@@ -198,7 +228,7 @@ export default function ProgramHero({ course }) {
             <div style={{
               opacity: visible ? 1 : 0, transform: visible ? "none" : "translateX(30px)", transition: "all 0.7s 0.3s ease",
             }}>
-              <div style={{
+              <div className="dp-ph-right-card" style={{
                 background: "#fff",
                 borderRadius: 24, padding: "2rem",
                 border: "1.5px solid rgba(20,41,208,0.12)",

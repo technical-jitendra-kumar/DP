@@ -12,10 +12,29 @@ export default function Eligibility({ course }) {
           0%,100% { transform: translateY(0) rotate(0deg); }
           50%      { transform: translateY(-14px) rotate(5deg); }
         }
-        @media (max-width: 900px) { .dp-elig-grid { grid-template-columns: 1fr !important; } }
+        /* ── Tablet (≤ 900px) ── */
+        @media (max-width: 900px) {
+          .dp-elig-grid    { grid-template-columns: 1fr 1fr !important; }
+          .dp-elig-section { padding: 72px 5% !important; }
+        }
+
+        /* ── Large mobile (≤ 640px) ── */
+        @media (max-width: 640px) {
+          .dp-elig-grid    { grid-template-columns: 1fr !important; gap: 1.25rem !important; }
+          .dp-elig-section { padding: 56px 5% !important; }
+          .dp-elig-header  { margin-bottom: 2.5rem !important; }
+          .dp-elig-card    { padding: 1.5rem !important; }
+        }
+
+        /* ── Small mobile (≤ 400px) ── */
+        @media (max-width: 400px) {
+          .dp-elig-section { padding: 44px 4% !important; }
+          .dp-elig-grid    { gap: 1rem !important; }
+          .dp-elig-card    { padding: 1.25rem !important; border-radius: 18px !important; }
+        }
       `}</style>
 
-      <section ref={ref} style={{
+      <section ref={ref} className="dp-elig-section" style={{
         fontFamily: "'DM Sans', sans-serif",
         padding: "90px 5%",
         background: "#F5F7FA",
@@ -31,7 +50,7 @@ export default function Eligibility({ course }) {
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
 
           {/* Header */}
-          <div style={{
+          <div className="dp-elig-header" style={{
             textAlign: "center", marginBottom: "4rem",
             opacity: inView ? 1 : 0, transform: inView ? "none" : "translateY(24px)", transition: "all 0.6s ease",
           }}>
@@ -57,7 +76,7 @@ export default function Eligibility({ course }) {
           <div className="dp-elig-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "2rem" }}>
 
             {/* ── This IS for you ── */}
-            <div style={{
+            <div className="dp-elig-card" style={{
               background: "#fff", borderRadius: 24, padding: "2rem",
               border: "1.5px solid #DCFCE7",
               boxShadow: "0 4px 20px rgba(5,150,105,0.07)",
@@ -86,7 +105,7 @@ export default function Eligibility({ course }) {
             </div>
 
             {/* ── NOT for you ── */}
-            <div style={{
+            <div className="dp-elig-card" style={{
               background: "#fff", borderRadius: 24, padding: "2rem",
               border: "1.5px solid #FEE2E2",
               boxShadow: "0 4px 20px rgba(220,38,38,0.06)",
@@ -115,7 +134,7 @@ export default function Eligibility({ course }) {
             </div>
 
             {/* ── Requirements ── */}
-            <div style={{
+            <div className="dp-elig-card" style={{
               background: "#fff", borderRadius: 24, padding: "2rem",
               border: "1.5px solid rgba(20,41,208,0.14)",
               boxShadow: "0 4px 20px rgba(20,41,208,0.07)",

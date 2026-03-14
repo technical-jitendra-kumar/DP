@@ -87,7 +87,8 @@ export default function CTASection() {
   const inputBase = (name) => ({
     width: "100%",
     padding: "14px 13px",
-    fontSize: "0.85rem",
+    // 16px prevents iOS Safari from auto-zooming on input focus
+    fontSize: "16px",
     fontFamily: "'DM Sans', sans-serif",
     border: `1.5px solid ${focused === name ? "#1429D0" : "rgba(20,41,208,0.15)"}`,
     borderRadius: "8px",
@@ -98,8 +99,6 @@ export default function CTASection() {
     boxShadow: focused === name ? "0 0 0 3px rgba(20,41,208,0.09)" : "none",
     transition: "all 0.2s ease",
     display: "block",
-    // Prevent zoom on iOS (font-size must be >= 16px to avoid auto-zoom)
-    fontSize: "16px",
   });
 
   return (

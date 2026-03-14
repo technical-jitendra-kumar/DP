@@ -128,7 +128,6 @@ export default function FAQSection() {
         .faq-right-heading {
           font-size: 1.5rem; font-weight: 800;
           color: #161619; margin: 0 0 6px; letter-spacing: -0.02em;
-          /* Add top padding matching label row height on left (~28px gap + ~16px label) */
           padding-top: 44px;
         }
         .faq-right-sub { font-size: 0.88rem; color: #36383e; margin: 0; }
@@ -187,13 +186,50 @@ export default function FAQSection() {
           padding-top: 14px;
         }
 
-        /* Responsive */
+        /* ── Tablet (≤ 900px) ── */
         @media (max-width: 900px) {
-          .faq-container { grid-template-columns: 1fr; gap: 48px; padding: 0 24px; }
-          .faq-left { position: static; justify-content: flex-start; height: auto; }
+          .faq-container {
+            grid-template-columns: 1fr;
+            gap: 44px;
+            padding: 0 28px;
+          }
+          .faq-right-heading { padding-top: 0; }
+          .faq-section { padding: 72px 0; }
+          .faq-highlights { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+          .faq-highlight-item:hover { transform: translateY(-2px) translateX(0); }
         }
-        @media (max-width: 540px) {
-          .faq-section { padding: 60px 0; }
+
+        /* ── Large mobile (≤ 640px) ── */
+        @media (max-width: 640px) {
+          .faq-section { padding: 56px 0; }
+          .faq-container { padding: 0 20px; gap: 36px; }
+          .faq-heading { font-size: clamp(1.7rem, 6vw, 2.2rem); }
+          .faq-desc { font-size: 0.93rem; }
+          .faq-highlights { grid-template-columns: 1fr; }
+          .faq-right-heading { font-size: 1.25rem; }
+          .faq-right-sub { font-size: 0.83rem; }
+          .faq-q-text { font-size: 0.9rem; }
+          .faq-a-text { font-size: 0.85rem; }
+          .faq-q-row { padding: 15px 16px; gap: 12px; }
+          .faq-a-text { padding: 0 16px 15px; padding-top: 12px; }
+          .faq-list { gap: 10px; }
+        }
+
+        /* ── Small mobile (≤ 400px) ── */
+        @media (max-width: 400px) {
+          .faq-section { padding: 44px 0; }
+          .faq-container { padding: 0 14px; gap: 28px; }
+          .faq-heading { font-size: 1.55rem; }
+          .faq-desc { font-size: 0.88rem; }
+          .faq-highlight-item { padding: 12px 13px; gap: 11px; }
+          .faq-highlight-title { font-size: 0.84rem; }
+          .faq-highlight-text  { font-size: 0.75rem; }
+          .faq-cta { font-size: 0.82rem; padding: 12px 14px; }
+          .faq-right-heading { font-size: 1.15rem; }
+          .faq-q-text { font-size: 0.85rem; }
+          .faq-chevron { width: 28px; height: 28px; }
+          .faq-q-row { padding: 13px 14px; }
+          .faq-a-text { padding: 0 14px 13px; padding-top: 11px; font-size: 0.82rem; }
         }
       `}</style>
 
