@@ -1,83 +1,85 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "../../components/auth/AuthLayout";
-
-const roleOptions = ["Admin", "Trainer", "Counselor", "Student"];
+import { useAuth } from "../../context/AuthContext";
 
 export default function SignInPage() {
-  const [role, setRole] = useState("");
+  const { login, loading, error } = useAuth();
   const navigate = useNavigate();
+  const [form, setForm] = useState({ email: "", password: "" });
 
-  const routeToRole = (value) => {
-    const selectedRole = value || role || "Admin";
-    const normalized = selectedRole.toLowerCase();
-    localStorage.setItem("demoRole", normalized);
-    navigate(`/${normalized}/dashboard`);
-  };
+  const handleChange = (e) =>
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    routeToRole();
+    try {
+      const res = await login(form.email, form.password);
+      // Backend returns role as uppercase e.g. "ADMIN" â†’ route to /admin/dashboard
+      const roleRoute = res.data?.role?.toLowerCase();
+      navigate(`/${roleRoute}/dashboard`);
+    } catch {
+      // error already set in AuthContext
+    }
   };
 
   return (
     <AuthLayout
       title="Welcome Back"
-      subtitle="Sign in to access your dashboard"
+      subtitle="Sign in to your DataPreneur workspace"
     >
       <form className="auth-form" onSubmit={handleSubmit}>
+
+        {/* Error message from backend */}
+        {error && (
+          <div style={{ color: "#ef4444", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 8, padding: "10px 14px", fontSize: 14 }}>
+            {error}
+          </div>
+        )}
+
+        {/* Email */}
         <div>
-          <label className="auth-label" htmlFor="signin-email">Email</label>
+          <label className="auth-label" htmlFor="signin-email">Email address</label>
           <div className="auth-input">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
-              <path d="M4 6h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z" />
-              <path d="m22 8-10 6L2 8" />
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="2" y="4" width="20" height="16" rx="2" />
+              <path d="m22 7-10 7L2 7" />
             </svg>
             <input
               id="signin-email"
+              name="email"
               type="email"
-              placeholder="name@institution.com"
+              placeholder="name@company.com"
               autoComplete="email"
+              value={form.email}
+              onChange={handleChange}
+              required
             />
           </div>
         </div>
 
+        {/* Password */}
         <div>
           <label className="auth-label" htmlFor="signin-password">Password</label>
           <div className="auth-input">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <rect x="3" y="11" width="18" height="10" rx="2" />
               <path d="M7 11V7a5 5 0 0 1 10 0v4" />
             </svg>
             <input
               id="signin-password"
+              name="password"
               type="password"
-              placeholder="••••••••"
+              placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
               autoComplete="current-password"
+              value={form.password}
+              onChange={handleChange}
+              required
             />
           </div>
         </div>
 
-        <div>
-          <label className="auth-label" htmlFor="signin-role">Access Role</label>
-          <div className="auth-input">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
-              <path d="M4 6h16" />
-              <path d="M4 12h16" />
-              <path d="M4 18h16" />
-            </svg>
-            <select id="signin-role" value={role} onChange={(event) => setRole(event.target.value)}>
-              <option value="" disabled>Select role</option>
-              {roleOptions.map((option) => (
-                <option key={option}>{option}</option>
-              ))}
-            </select>
-            <svg className="auth-select-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
-              <path d="M6 9l6 6 6-6" />
-            </svg>
-          </div>
-        </div>
-
+        {/* Remember / Forgot */}
         <div className="auth-row">
           <label className="auth-checkbox">
             <input type="checkbox" />
@@ -88,29 +90,17 @@ export default function SignInPage() {
           </Link>
         </div>
 
-        <button className="auth-button" type="submit">
-          Sign In
+        {/* Submit */}
+        <button className="auth-button" type="submit" disabled={loading}>
+          {loading ? "Signing in..." : "Sign In â†’"}
         </button>
 
-        <div className="auth-demo">
-          <span>Demo Access (One-Click)</span>
-          <div className="auth-demo-buttons">
-            {roleOptions.map((option) => (
-              <button
-                type="button"
-                key={option}
-                className="auth-demo-button"
-                onClick={() => routeToRole(option)}
-              >
-                {option}
-              </button>
-            ))}
-          </div>
-        </div>
-
+        {/* Footer */}
         <p className="auth-footer">
-          Don&apos;t have an account? <Link className="auth-link" to="/signup">Create account</Link>
+          No account?{" "}
+          <Link className="auth-link" to="/signup">Create workspace</Link>
         </p>
+
       </form>
     </AuthLayout>
   );

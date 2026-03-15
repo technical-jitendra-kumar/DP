@@ -1,13 +1,27 @@
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+
 const roleNames = {
-  admin: "Admin",
-  trainer: "Trainer",
-  counselor: "Counselor",
-  student: "Student",
+  admin: "Admin", ADMIN: "Admin",
+  trainer: "Trainer", TRAINER: "Trainer",
+  counselor: "Counselor", COUNSELOR: "Counselor",
+  student: "Student", STUDENT: "Student",
 };
 
+function getInitials(name = "") {
+  return name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2) || "??";
+}
+
 export default function AdminNavbar({ role = "admin" }) {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const normalizedRole = (role || "admin").toLowerCase();
   const roleLabel = roleNames[normalizedRole] || "Admin";
+
+  const handleLogout = () => {
+    logout();
+    navigate("/signin");
+  };
 
   return (
     <header className="admin-navbar">
@@ -19,11 +33,7 @@ export default function AdminNavbar({ role = "admin" }) {
             <circle cx="11" cy="11" r="7" />
             <path d="M20 20l-3.5-3.5" />
           </svg>
-          <input
-            id="admin-search"
-            type="text"
-            placeholder="Search..."
-          />
+          <input id="admin-search" type="text" placeholder="Search..." />
         </label>
 
         <div className="admin-navbar-actions">
@@ -37,11 +47,16 @@ export default function AdminNavbar({ role = "admin" }) {
 
           <div className="admin-user">
             <div>
-              <div className="admin-user-name">Alex Morgan</div>
+              <div className="admin-user-name">{user?.name || "User"}</div>
               <div className="admin-user-role">{roleLabel}</div>
             </div>
-            <div className="admin-avatar">
-              AM
+            <div
+              className="admin-avatar"
+              title="Click to logout"
+              style={{ cursor: "pointer" }}
+              onClick={handleLogout}
+            >
+              {getInitials(user?.name)}
               <span className="admin-status" />
             </div>
           </div>

@@ -502,22 +502,57 @@ export default function AboutPage() {
         }
         .dp-btn-outline:hover { background: #F2F5FF; transform: translateY(-2px); }
 
-        @media (max-width: 768px) {
-          .two-col   { grid-template-columns: 1fr !important; }
+        /* ── Tablet (≤ 900px) ── */
+        @media (max-width: 900px) {
+          .two-col   { grid-template-columns: 1fr !important; gap: 48px !important; }
           .four-col  { grid-template-columns: repeat(2, 1fr) !important; }
+          .three-col { grid-template-columns: repeat(2, 1fr) !important; }
+          .dp-cta-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
+          .dp-hero-badges { display: none !important; }
+          .dp-section-pad { padding: 64px 0 !important; }
+          .dp-container { padding: 0 28px !important; }
+        }
+
+        /* ── Large mobile (≤ 640px) ── */
+        @media (max-width: 640px) {
+          .two-col   { gap: 36px !important; }
+          .four-col  { grid-template-columns: repeat(2, 1fr) !important; gap: 14px !important; }
           .three-col { grid-template-columns: 1fr !important; }
+          .dp-section-pad  { padding: 52px 0 !important; }
+          .dp-container    { padding: 0 18px !important; }
+          .dp-cta-inner    { padding: 36px 24px !important; border-radius: 20px !important; }
+          .dp-hero-section { padding-top: 72px !important; padding-bottom: 56px !important; }
+          .dp-stats-section { padding: 48px 0 !important; }
+          .dp-hero-btns    { flex-direction: column !important; }
+          .dp-btn-primary, .dp-btn-outline { width: 100%; justify-content: center; }
+          .dp-mini-stat-grid { grid-template-columns: 1fr 1fr !important; }
+          .dp-mission-tags   { gap: 6px !important; }
+          .dp-mission-cards  { grid-template-columns: 1fr !important; }
+          .dp-timeline-col   { display: none !important; }
+          .dp-timeline-full  { grid-template-columns: 1fr !important; gap: 36px !important; }
+          .dp-chips          { gap: 8px !important; }
+        }
+
+        /* ── Small mobile (≤ 400px) ── */
+        @media (max-width: 400px) {
+          .dp-container { padding: 0 14px !important; }
+          .dp-section-pad { padding: 40px 0 !important; }
+          .four-col  { gap: 10px !important; }
+          .dp-cta-inner { padding: 28px 16px !important; }
+          .dp-stat-card-pad { padding: 22px 16px !important; }
+          .dp-value-card-pad { padding: 22px 18px !important; }
         }
       `}</style>
 
       <main style={{ background: "#F5F7FA", fontFamily: "'DM Sans', sans-serif", paddingTop: 66 }}>
 
         {/* ══════ HERO ══════ */}
-        <section ref={heroRef} style={{ background: "#fff", position: "relative", overflow: "hidden", paddingTop: 88, paddingBottom: 88 }}>
+        <section ref={heroRef} className="dp-hero-section" style={{ background: "#fff", position: "relative", overflow: "hidden", paddingTop: 88, paddingBottom: 88 }}>
           <div className="dp-grid-bg" style={{ position: "absolute", inset: 0 }} />
           <div style={{ position: "absolute", width: 600, height: 600, borderRadius: "50%", background: "radial-gradient(circle, rgba(20,41,208,0.07) 0%, transparent 70%)", top: -120, right: -80, pointerEvents: "none" }} />
           <div style={{ position: "absolute", width: 300, height: 300, borderRadius: "50%", background: "radial-gradient(circle, rgba(14,127,221,0.06) 0%, transparent 70%)", bottom: -60, left: 80, pointerEvents: "none" }} />
 
-          <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 40px", position: "relative", zIndex: 1 }}>
+          <div className="dp-container" style={{ maxWidth: 1200, margin: "0 auto", padding: "0 40px", position: "relative", zIndex: 1 }}>
             <div className="two-col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "center" }}>
 
               {/* Left */}
@@ -525,7 +560,7 @@ export default function AboutPage() {
                 <div style={{ opacity: heroInView ? 1 : 0, transform: heroInView ? "translateY(0)" : "translateY(24px)", transition: "all 0.7s cubic-bezier(0.16,1,0.3,1) 0.05s" }}>
                   <SectionLabel>About DataPreneur</SectionLabel>
                 </div>
-                <h1 style={{ fontFamily: "'Clash Display', sans-serif", fontSize: "clamp(40px, 5vw, 60px)", fontWeight: 700, lineHeight: 1.1, color: "#161619", opacity: heroInView ? 1 : 0, transform: heroInView ? "translateY(0)" : "translateY(32px)", transition: "all 0.75s cubic-bezier(0.16,1,0.3,1) 0.15s" }}>
+                <h1 style={{ fontFamily: "'Clash Display', sans-serif", fontSize: "clamp(36px, 5vw, 60px)", fontWeight: 700, lineHeight: 1.1, color: "#161619", opacity: heroInView ? 1 : 0, transform: heroInView ? "translateY(0)" : "translateY(32px)", transition: "all 0.75s cubic-bezier(0.16,1,0.3,1) 0.15s" }}>
                   We Turn <span className="dp-gradient">Data</span><br />Into Dream Careers.
                 </h1>
                 <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 17, color: "#6B7280", lineHeight: 1.75, maxWidth: 480, opacity: heroInView ? 1 : 0, transform: heroInView ? "translateY(0)" : "translateY(24px)", transition: "all 0.75s cubic-bezier(0.16,1,0.3,1) 0.28s" }}>
@@ -541,7 +576,7 @@ export default function AboutPage() {
                     </div>
                   ))}
                 </div>
-                <div style={{ display: "flex", gap: 14, flexWrap: "wrap", opacity: heroInView ? 1 : 0, transform: heroInView ? "translateY(0)" : "translateY(16px)", transition: "all 0.75s cubic-bezier(0.16,1,0.3,1) 0.48s" }}>
+                <div className="dp-hero-btns" style={{ display: "flex", gap: 14, flexWrap: "wrap", opacity: heroInView ? 1 : 0, transform: heroInView ? "translateY(0)" : "translateY(16px)", transition: "all 0.75s cubic-bezier(0.16,1,0.3,1) 0.48s" }}>
                   <button className="dp-btn-primary">Explore Courses →</button>
                   <button className="dp-btn-outline">Our Story</button>
                 </div>
@@ -559,7 +594,7 @@ export default function AboutPage() {
                       "Democratizing data education for every Indian professional."
                     </div>
                     <div style={{ fontFamily: "'DM Sans', sans-serif", color: "rgba(255,255,255,0.6)", fontSize: 13 }}>— DataPreneur's founding mission, 2019</div>
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginTop: 32 }}>
+                    <div className="dp-mini-stat-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginTop: 32 }}>
                       {[{ v: "10K+", l: "Students" }, { v: "95%", l: "Placement" }, { v: "200+", l: "Partners" }].map((s, i) => (
                         <div key={i} style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 14, padding: "16px 12px", textAlign: "center" }}>
                           <div style={{ fontFamily: "'Clash Display', sans-serif", color: "#fff", fontSize: 22, fontWeight: 700 }}>{s.v}</div>
@@ -569,16 +604,15 @@ export default function AboutPage() {
                     </div>
                   </div>
                 </div>
-                {/* Floating badge — Top Rated */}
-                <div style={{ position: "absolute", top: -20, right: -20, background: "#fff", border: "1.5px solid #E8EEFF", borderRadius: 16, padding: "12px 18px", display: "flex", alignItems: "center", gap: 10, boxShadow: "0 8px 32px rgba(20,41,208,0.12)", animation: "float-y 3s ease-in-out infinite" }}>
+                {/* Floating badges — hidden on mobile via className */}
+                <div className="dp-hero-badges" style={{ position: "absolute", top: -20, right: -20, background: "#fff", border: "1.5px solid #E8EEFF", borderRadius: 16, padding: "12px 18px", display: "flex", alignItems: "center", gap: 10, boxShadow: "0 8px 32px rgba(20,41,208,0.12)", animation: "float-y 3s ease-in-out infinite" }}>
                   <IconTrophy />
                   <div>
                     <div style={{ fontFamily: "'Clash Grotesk', sans-serif", fontSize: 13, fontWeight: 600, color: "#262832" }}>Top Rated</div>
                     <div style={{ display: "flex", gap: 2, marginTop: 2 }}>{[...Array(5)].map((_, i) => <IconStarFill key={i} />)}</div>
                   </div>
                 </div>
-                {/* Floating badge — Since 2019 */}
-                <div style={{ position: "absolute", bottom: -20, left: -20, background: "#fff", border: "1.5px solid #E8EEFF", borderRadius: 16, padding: "12px 18px", display: "flex", alignItems: "center", gap: 10, boxShadow: "0 8px 32px rgba(20,41,208,0.12)", animation: "float-y 3.5s ease-in-out infinite 0.8s" }}>
+                <div className="dp-hero-badges" style={{ position: "absolute", bottom: -20, left: -20, background: "#fff", border: "1.5px solid #E8EEFF", borderRadius: 16, padding: "12px 18px", display: "flex", alignItems: "center", gap: 10, boxShadow: "0 8px 32px rgba(20,41,208,0.12)", animation: "float-y 3.5s ease-in-out infinite 0.8s" }}>
                   <div style={{ width: 36, height: 36, borderRadius: "50%", background: "linear-gradient(135deg,#1429D0,#0E7FDD)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                     <IconGradCap />
                   </div>
@@ -593,9 +627,9 @@ export default function AboutPage() {
         </section>
 
         {/* ══════ STATS ══════ */}
-        <section ref={statsRef} style={{ background: "#F5F7FA", padding: "64px 0" }}>
-          <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 40px" }}>
-            <div className="four-col" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 20 }}>
+        <section ref={statsRef} className="dp-stats-section" style={{ background: "#F5F7FA", padding: "64px 0" }}>
+          <div className="dp-container" style={{ maxWidth: 1200, margin: "0 auto", padding: "0 40px" }}>
+            <div className="four-col dp-stat-card-pad" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 20 }}>
               <StatCard value={10000} suffix="+" label="Students Trained"  sub="Across India & abroad"          delay={0}   active={statsInView} />
               <StatCard value={95}    suffix="%" label="Placement Rate"     sub="Within 90 days of completion"   delay={120} active={statsInView} />
               <StatCard value={50}    suffix="+" label="Expert Mentors"     sub="Active industry professionals"  delay={240} active={statsInView} />
@@ -605,9 +639,9 @@ export default function AboutPage() {
         </section>
 
         {/* ══════ MISSION ══════ */}
-        <section ref={missionRef} style={{ background: "#fff", padding: "90px 0", position: "relative", overflow: "hidden" }}>
+        <section ref={missionRef} className="dp-section-pad" style={{ background: "#fff", padding: "90px 0", position: "relative", overflow: "hidden" }}>
           <div className="dp-dot-bg" style={{ position: "absolute", inset: 0 }} />
-          <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 40px", position: "relative", zIndex: 1 }}>
+          <div className="dp-container" style={{ maxWidth: 1200, margin: "0 auto", padding: "0 40px", position: "relative", zIndex: 1 }}>
             <div className="two-col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 72, alignItems: "center" }}>
               {/* Left visual */}
               <div style={{ opacity: missionInView ? 1 : 0, transform: missionInView ? "translateX(0)" : "translateX(-40px)", transition: "all 0.85s cubic-bezier(0.16,1,0.3,1)", display: "flex", flexDirection: "column", gap: 16 }}>
@@ -615,13 +649,13 @@ export default function AboutPage() {
                   <div style={{ position: "absolute", top: -40, right: -40, width: 160, height: 160, borderRadius: "50%", background: "rgba(20,41,208,0.07)" }} />
                   <div style={{ fontFamily: "'Clash Display', sans-serif", color: "#1429D0", fontSize: 12, letterSpacing: 2, textTransform: "uppercase", marginBottom: 10, fontWeight: 600 }}>Our Approach</div>
                   <div style={{ fontFamily: "'Clash Display', sans-serif", color: "#262832", fontSize: 24, fontWeight: 700, lineHeight: 1.3, marginBottom: 20 }}>Real Skills. Real Projects. Real Results.</div>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                  <div className="dp-mission-tags" style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                     {["Python","SQL","Power BI","Machine Learning","Tableau","Statistics"].map(tag => (
                       <span key={tag} style={{ background: "#fff", border: "1.5px solid #BFD2FF", borderRadius: 999, padding: "4px 14px", fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: "#1429D0", fontWeight: 500 }}>{tag}</span>
                     ))}
                   </div>
                 </div>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                <div className="dp-mission-cards" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
                   {[
                     { Icon: IconTarget,  title: "Outcome Driven", desc: "Every course is mapped to specific job roles and salary targets." },
                     { Icon: IconRefresh, title: "Always Updated",  desc: "Curriculum refreshed quarterly to match live industry needs." },
@@ -637,7 +671,7 @@ export default function AboutPage() {
               {/* Right copy */}
               <div style={{ opacity: missionInView ? 1 : 0, transform: missionInView ? "translateX(0)" : "translateX(40px)", transition: "all 0.85s cubic-bezier(0.16,1,0.3,1) 0.2s", display: "flex", flexDirection: "column", gap: 22 }}>
                 <SectionLabel>Who We Are</SectionLabel>
-                <h2 style={{ fontFamily: "'Clash Display', sans-serif", fontSize: "clamp(30px, 3.5vw, 46px)", fontWeight: 700, color: "#161619", lineHeight: 1.15 }}>
+                <h2 style={{ fontFamily: "'Clash Display', sans-serif", fontSize: "clamp(28px, 3.5vw, 46px)", fontWeight: 700, color: "#161619", lineHeight: 1.15 }}>
                   Built by <span className="dp-gradient">Practitioners</span>,<br />For Practitioners.
                 </h2>
                 <div style={{ width: 64, height: 3, background: "linear-gradient(90deg, #1429D0, #0E7FDD)", borderRadius: 2 }} />
@@ -663,18 +697,18 @@ export default function AboutPage() {
         </section>
 
         {/* ══════ VALUES ══════ */}
-        <section ref={valuesRef} style={{ background: "#F5F7FA", padding: "90px 0" }}>
-          <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 40px" }}>
+        <section ref={valuesRef} className="dp-section-pad" style={{ background: "#F5F7FA", padding: "90px 0" }}>
+          <div className="dp-container" style={{ maxWidth: 1200, margin: "0 auto", padding: "0 40px" }}>
             <div style={{ textAlign: "center", marginBottom: 56, opacity: valuesInView ? 1 : 0, transform: valuesInView ? "translateY(0)" : "translateY(24px)", transition: "all 0.65s cubic-bezier(0.16,1,0.3,1)" }}>
               <SectionLabel>Our Values</SectionLabel>
-              <h2 style={{ fontFamily: "'Clash Display', sans-serif", fontSize: "clamp(30px, 3.5vw, 48px)", fontWeight: 700, color: "#161619", lineHeight: 1.15, marginTop: 4 }}>
+              <h2 style={{ fontFamily: "'Clash Display', sans-serif", fontSize: "clamp(28px, 3.5vw, 48px)", fontWeight: 700, color: "#161619", lineHeight: 1.15, marginTop: 4 }}>
                 What Drives <span className="dp-gradient">Everything</span> We Do
               </h2>
               <p style={{ fontFamily: "'DM Sans', sans-serif", color: "#6B7280", fontSize: 16, maxWidth: 500, margin: "16px auto 0", lineHeight: 1.7 }}>
                 Six principles that guide every decision we make at DataPreneur.
               </p>
             </div>
-            <div className="three-col" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }}>
+            <div className="three-col dp-value-card-pad" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }}>
               {[
                 { title: "Outcome First",    desc: "Every decision is anchored to one question: does this get our student closer to their dream career? If not, we don't build it.", delay: 0 },
                 { title: "Real-World Depth", desc: "We go beyond surface-level tutorials. Our courses are rooted in real industry use-cases, giving students a competitive edge from day one.", delay: 100 },
@@ -688,20 +722,20 @@ export default function AboutPage() {
         </section>
 
         {/* ══════ TIMELINE ══════ */}
-        <section ref={timelineRef} style={{ background: "#fff", padding: "90px 0", position: "relative", overflow: "hidden" }}>
+        <section ref={timelineRef} className="dp-section-pad" style={{ background: "#fff", padding: "90px 0", position: "relative", overflow: "hidden" }}>
           <div className="dp-dot-bg" style={{ position: "absolute", inset: 0 }} />
           <div style={{ position: "absolute", top: "50%", left: "55%", transform: "translate(-50%, -50%)", fontFamily: "'Clash Display', sans-serif", fontSize: "clamp(80px,18vw,200px)", fontWeight: 700, color: "rgba(20,41,208,0.03)", whiteSpace: "nowrap", pointerEvents: "none", userSelect: "none", letterSpacing: -4 }}>JOURNEY</div>
-          <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 40px", position: "relative", zIndex: 1 }}>
-            <div className="two-col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "start" }}>
-              <div style={{ opacity: timelineInView ? 1 : 0, transform: timelineInView ? "translateX(0)" : "translateX(-40px)", transition: "all 0.85s cubic-bezier(0.16,1,0.3,1)" }}>
+          <div className="dp-container" style={{ maxWidth: 1200, margin: "0 auto", padding: "0 40px", position: "relative", zIndex: 1 }}>
+            <div className="two-col dp-timeline-full" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "start" }}>
+              <div className="dp-timeline-col" style={{ opacity: timelineInView ? 1 : 0, transform: timelineInView ? "translateX(0)" : "translateX(-40px)", transition: "all 0.85s cubic-bezier(0.16,1,0.3,1)" }}>
                 <SectionLabel>Our Journey</SectionLabel>
-                <h2 style={{ fontFamily: "'Clash Display', sans-serif", fontSize: "clamp(30px, 3.5vw, 46px)", fontWeight: 700, color: "#161619", lineHeight: 1.15, marginTop: 8, marginBottom: 20 }}>
+                <h2 style={{ fontFamily: "'Clash Display', sans-serif", fontSize: "clamp(28px, 3.5vw, 46px)", fontWeight: 700, color: "#161619", lineHeight: 1.15, marginTop: 8, marginBottom: 20 }}>
                   From an Idea to<br /><span className="dp-gradient">India's Best.</span>
                 </h2>
                 <p style={{ fontFamily: "'DM Sans', sans-serif", color: "#6B7280", fontSize: 16, lineHeight: 1.8, maxWidth: 400, marginBottom: 32 }}>
                   A five-year journey of relentless focus on transforming careers through world-class data education.
                 </p>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+                <div className="dp-chips" style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
                   {["🏆 India's #1 Rated","🎓 10,000+ Alumni","🤝 200+ Partners","⭐ 4.9/5 Rating"].map(chip => (
                     <span key={chip} style={{ background: "#F2F5FF", border: "1.5px solid #BFD2FF", borderRadius: 999, padding: "7px 16px", fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#1429D0", fontWeight: 500 }}>{chip}</span>
                   ))}
@@ -721,11 +755,11 @@ export default function AboutPage() {
         </section>
 
         {/* ══════ TEAM ══════ */}
-        <section ref={teamRef} style={{ background: "#F5F7FA", padding: "90px 0" }}>
-          <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 40px" }}>
+        <section ref={teamRef} className="dp-section-pad" style={{ background: "#F5F7FA", padding: "90px 0" }}>
+          <div className="dp-container" style={{ maxWidth: 1200, margin: "0 auto", padding: "0 40px" }}>
             <div style={{ textAlign: "center", marginBottom: 56, opacity: teamInView ? 1 : 0, transform: teamInView ? "translateY(0)" : "translateY(24px)", transition: "all 0.65s cubic-bezier(0.16,1,0.3,1)" }}>
               <SectionLabel>The Team</SectionLabel>
-              <h2 style={{ fontFamily: "'Clash Display', sans-serif", fontSize: "clamp(30px, 3.5vw, 48px)", fontWeight: 700, color: "#161619", lineHeight: 1.15, marginTop: 4 }}>
+              <h2 style={{ fontFamily: "'Clash Display', sans-serif", fontSize: "clamp(28px, 3.5vw, 48px)", fontWeight: 700, color: "#161619", lineHeight: 1.15, marginTop: 4 }}>
                 Minds Behind <span className="dp-gradient">DataPreneur</span>
               </h2>
               <p style={{ fontFamily: "'DM Sans', sans-serif", color: "#6B7280", fontSize: 16, maxWidth: 480, margin: "16px auto 0", lineHeight: 1.7 }}>
@@ -743,9 +777,9 @@ export default function AboutPage() {
 
         {/* ══════ PARTNERS MARQUEE ══════ */}
         <section ref={partnersRef} style={{ background: "#fff", padding: "64px 0", borderTop: "1.5px solid #E8EEFF", borderBottom: "1.5px solid #E8EEFF", overflow: "hidden" }}>
-          <div style={{ textAlign: "center", marginBottom: 36, opacity: partnersInView ? 1 : 0, transition: "all 0.65s cubic-bezier(0.16,1,0.3,1)" }}>
+          <div style={{ textAlign: "center", marginBottom: 36, padding: "0 20px", opacity: partnersInView ? 1 : 0, transition: "all 0.65s cubic-bezier(0.16,1,0.3,1)" }}>
             <SectionLabel>Hiring Partners</SectionLabel>
-            <h3 style={{ fontFamily: "'Clash Display', sans-serif", color: "#161619", fontSize: 28, fontWeight: 700, marginTop: 4 }}>
+            <h3 style={{ fontFamily: "'Clash Display', sans-serif", color: "#161619", fontSize: "clamp(20px, 3vw, 28px)", fontWeight: 700, marginTop: 4 }}>
               Our Graduates Work at <span className="dp-gradient">Dream Companies</span>
             </h3>
           </div>
@@ -771,11 +805,11 @@ export default function AboutPage() {
         </section>
 
         {/* ══════ CTA ══════ */}
-        <section ref={ctaRef} style={{ background: "#F5F7FA", padding: "90px 0", position: "relative", overflow: "hidden" }}>
+        <section ref={ctaRef} className="dp-section-pad" style={{ background: "#F5F7FA", padding: "90px 0", position: "relative", overflow: "hidden" }}>
           <div className="dp-grid-bg" style={{ position: "absolute", inset: 0 }} />
           <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 70% 60% at 50% 50%, rgba(20,41,208,0.05) 0%, transparent 70%)" }} />
-          <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 40px", position: "relative", zIndex: 1 }}>
-            <div style={{
+          <div className="dp-container" style={{ maxWidth: 1200, margin: "0 auto", padding: "0 40px", position: "relative", zIndex: 1 }}>
+            <div className="dp-cta-inner" style={{
               background: "linear-gradient(135deg, #1429D0 0%, #1E3A8A 100%)",
               borderRadius: 32, padding: "64px",
               display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "center",
@@ -790,7 +824,7 @@ export default function AboutPage() {
 
               <div style={{ position: "relative", zIndex: 1 }}>
                 <div style={{ display: "inline-flex", background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 999, padding: "5px 16px", fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "rgba(255,255,255,0.85)", marginBottom: 20 }}>Start Your Journey</div>
-                <h2 style={{ fontFamily: "'Clash Display', sans-serif", fontSize: "clamp(28px, 3.5vw, 44px)", fontWeight: 700, color: "#fff", lineHeight: 1.15, marginBottom: 16 }}>
+                <h2 style={{ fontFamily: "'Clash Display', sans-serif", fontSize: "clamp(26px, 3.5vw, 44px)", fontWeight: 700, color: "#fff", lineHeight: 1.15, marginBottom: 16 }}>
                   Your Data Career<br />Starts Here.
                 </h2>
                 <p style={{ fontFamily: "'DM Sans', sans-serif", color: "rgba(255,255,255,0.7)", fontSize: 16, lineHeight: 1.7 }}>
@@ -811,7 +845,7 @@ export default function AboutPage() {
                     <span style={{ fontFamily: "'DM Sans', sans-serif", color: "rgba(255,255,255,0.85)", fontSize: 15 }}>{item.text}</span>
                   </div>
                 ))}
-                <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
+                <div style={{ display: "flex", gap: 12, marginTop: 8, flexWrap: "wrap" }}>
                   <button style={{ background: "#fff", color: "#1429D0", border: "none", cursor: "pointer", borderRadius: 12, padding: "14px 28px", fontFamily: "'Clash Grotesk', sans-serif", fontSize: 15, fontWeight: 600, display: "inline-flex", alignItems: "center", gap: 8, transition: "all 0.22s ease", boxShadow: "0 4px 20px rgba(0,0,0,0.15)" }}>
                     Start Learning Today →
                   </button>
