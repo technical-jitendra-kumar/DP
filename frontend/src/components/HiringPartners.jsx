@@ -442,9 +442,12 @@ export default function HiringPartners() {
         .hp-row {
           overflow: hidden;
           margin-bottom: 0.9rem;
-          padding: 0.1rem 0; /* prevent box-shadow clipping */
+          /* Give vertical breathing room so hover shadows aren't clipped */
+          padding: 10px 0;
+          margin-top: -10px;
+          margin-bottom: calc(0.9rem - 10px);
         }
-        .hp-row:last-child { margin-bottom: 0; }
+        .hp-row:last-child { margin-bottom: -10px; }
 
         @keyframes marqueeLeft {
           from { transform: translateX(0); }
