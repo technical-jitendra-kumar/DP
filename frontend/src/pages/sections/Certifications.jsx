@@ -1,12 +1,12 @@
 import { useState, useRef } from 'react';
-import { Shield, Briefcase, QrCode, Globe, CheckCircle, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, CheckCircle, Globe, Shield, Briefcase, QrCode, Star } from 'lucide-react';
 import img  from '../../assets/certificate.png';
 import img1 from '../../assets/certificate2.png';
 import img2 from '../../assets/certificate3.png';
 
-/* ── Real LinkedIn SVG icon ── */
-const LinkedInIcon = ({ size = 20 }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+/* ── LinkedIn icon ── */
+const LinkedInIcon = ({ size = 18 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
     <rect width="24" height="24" rx="4" fill="#0A66C2"/>
     <path d="M7.5 9.5H5V19H7.5V9.5Z" fill="white"/>
     <circle cx="6.25" cy="6.75" r="1.5" fill="white"/>
@@ -14,447 +14,612 @@ const LinkedInIcon = ({ size = 20 }) => (
   </svg>
 );
 
+/* ── Microsoft logo ── */
+const MicrosoftIcon = ({ size = 18 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <rect x="1" y="1" width="10.5" height="10.5" fill="#F25022"/>
+    <rect x="12.5" y="1" width="10.5" height="10.5" fill="#7FBA00"/>
+    <rect x="1" y="12.5" width="10.5" height="10.5" fill="#00A4EF"/>
+    <rect x="12.5" y="12.5" width="10.5" height="10.5" fill="#FFB900"/>
+  </svg>
+);
+
+/* ── Certificate data ── */
+const certsData = [
+  {
+    img:     img,
+    num:     '01',
+    tag:     'Globally Recognized',
+    title:   'Microsoft Certification',
+    desc:    'Microsoft DP-900 is an internationally recognized certification that many companies and clients directly ask for. It validates your core data and essential cloud skills, making you more job-ready and client-ready.',
+    issuer:  'Microsoft',
+    skills:  ['Azure Data', 'Cloud Fundamentals', 'Data Analytics'],
+  },
+  {
+    img:     img1,
+    num:     '02',
+    tag:     'Industry Standard',
+    title:   'DataPreneur Certificate',
+    desc:    'Our in-house certification is co-verified with NASSCOM and trusted by 400+ hiring partners. It demonstrates real-world project delivery, technical proficiency, and career readiness across data domains.',
+    issuer:  'DataPreneur × NASSCOM',
+    skills:  ['Python', 'SQL', 'Machine Learning'],
+  },
+  {
+    img:     img2,
+    num:     '03',
+    tag:     'LinkedIn Verified',
+    title:   'Specialisation Badge',
+    desc:    'A domain-specific badge that maps directly to job descriptions. Verifiable via QR code by any hiring manager within seconds — shared directly to your LinkedIn profile upon completion.',
+    issuer:  'DataPreneur',
+    skills:  ['Data Science', 'AI/ML', 'BI & Visualization'],
+  },
+];
+
+const trust = [
+  { icon: Shield,    text: 'Blockchain Verified'  },
+  { icon: LinkedInIcon, text: 'LinkedIn Ready'    },
+  { icon: QrCode,    text: 'QR Scannable'         },
+  { icon: Globe,     text: '25+ Countries'        },
+];
+
+const stats = [
+  { n: '12K+',  l: 'Issued' },
+  { n: '400+',  l: 'Partners' },
+  { n: '92%',   l: 'Career Growth' },
+  { n: '4.9★',  l: 'Rating' },
+];
+
 export default function CertificationsSection() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [animating, setAnimating]     = useState(false);
-  const [direction, setDirection]     = useState(null);
+  const [active, setActive]       = useState(0);
+  const [animating, setAnimating] = useState(false);
+  const [dir, setDir]             = useState(null);
+  const dragX = useRef(null);
 
-  const dragStartX  = useRef(null);
-  const isDragging  = useRef(false);
-
-  const certificates = [img, img1, img2];
-
-  const badges = [
-    { icon: Shield,    title: 'Verified Digital Credential' },
-    { icon: Briefcase, title: 'LinkedIn Ready'              },
-    { icon: QrCode,    title: 'QR Verification'             },
-    { icon: Globe,     title: 'Globally Accepted'           },
-  ];
-
-  const stats = [
-    { number: '12,000+', label: 'Certificates Issued' },
-    { number: '92%',     label: 'Career Growth'        },
-    { number: '400+',    label: 'Hiring Partners'      },
-    { number: '25+',     label: 'Countries'             },
-  ];
-
-  const nextCert = () => {
-    if (animating) return;
-    setDirection('left');
+  const go = (idx, d) => {
+    if (animating || idx === active) return;
+    setDir(d);
     setAnimating(true);
-    setTimeout(() => {
-      setActiveIndex(p => (p + 1) % certificates.length);
-      setAnimating(false);
-      setDirection(null);
-    }, 420);
+    setTimeout(() => { setActive(idx); setAnimating(false); setDir(null); }, 400);
   };
+  const next = () => go((active + 1) % certsData.length, 'left');
+  const prev = () => go((active - 1 + certsData.length) % certsData.length, 'right');
 
-  const prevCert = () => {
-    if (animating) return;
-    setDirection('right');
-    setAnimating(true);
-    setTimeout(() => {
-      setActiveIndex(p => (p - 1 + certificates.length) % certificates.length);
-      setAnimating(false);
-      setDirection(null);
-    }, 420);
-  };
-
-  const onMouseDown  = (e) => { dragStartX.current = e.clientX; isDragging.current = true; };
-  const onMouseMove  = (e) => {};
-  const onMouseUp    = (e) => {
-    if (!isDragging.current || dragStartX.current === null) return;
-    const delta = dragStartX.current - e.clientX;
-    if (Math.abs(delta) > 40) delta > 0 ? nextCert() : prevCert();
-    isDragging.current = false;
-    dragStartX.current = null;
-  };
-  const onMouseLeave = () => { isDragging.current = false; dragStartX.current = null; };
-  const onTouchStart = (e) => { dragStartX.current = e.touches[0].clientX; };
+  const onTouchStart = (e) => { dragX.current = e.touches[0].clientX; };
   const onTouchEnd   = (e) => {
-    if (dragStartX.current === null) return;
-    const delta = dragStartX.current - e.changedTouches[0].clientX;
-    if (Math.abs(delta) > 40) delta > 0 ? nextCert() : prevCert();
-    dragStartX.current = null;
+    if (dragX.current === null) return;
+    const d = dragX.current - e.changedTouches[0].clientX;
+    if (Math.abs(d) > 40) d > 0 ? next() : prev();
+    dragX.current = null;
+  };
+  const onMouseDown  = (e) => { dragX.current = e.clientX; };
+  const onMouseUp    = (e) => {
+    if (dragX.current === null) return;
+    const d = dragX.current - e.clientX;
+    if (Math.abs(d) > 40) d > 0 ? next() : prev();
+    dragX.current = null;
   };
 
-  const animClass = direction === 'left' ? 'cert-slide-left' : direction === 'right' ? 'cert-slide-right' : '';
+  const cert    = certsData[active];
+  const nextIdx = dir === 'left' ? (active + 1) % certsData.length : (active - 1 + certsData.length) % certsData.length;
 
   return (
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&display=swap');
 
-        .cert-section *,
-        .cert-section *::before,
-        .cert-section *::after { box-sizing: border-box; }
+        .dc * { box-sizing: border-box; }
 
-        .cert-section {
-          padding: 90px 0;
-          background: #ffffff;
-          overflow: hidden;
-          position: relative;
+        /* ════════════════════════════════════
+           SECTION — dark gradient hero
+        ════════════════════════════════════ */
+        .dc {
           font-family: 'DM Sans', sans-serif;
+          background: linear-gradient(145deg, #0a0c1a 0%, #0f1535 35%, #1429D0 70%, #0E7FDD 100%);
+          position: relative; overflow: hidden;
+          padding: 0 0 5rem;
         }
 
-        .cert-blob-tr {
-          position: absolute; top: -60px; right: -60px;
-          width: 380px; height: 380px; border-radius: 50%;
-          background: radial-gradient(circle, rgba(20,41,208,0.07) 0%, transparent 70%);
-          pointer-events: none;
+        /* Grid lines overlay — like reference image */
+        .dc-grid-lines {
+          position: absolute; inset: 0; pointer-events: none; z-index: 0;
+          background-image:
+            linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+          background-size: 60px 60px;
+          mask-image: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.6) 20%, rgba(0,0,0,0.6) 80%, transparent 100%);
         }
-        .cert-blob-bl {
-          position: absolute; bottom: -60px; left: -60px;
-          width: 300px; height: 300px; border-radius: 50%;
-          background: radial-gradient(circle, rgba(14,127,221,0.06) 0%, transparent 70%);
-          pointer-events: none;
+        /* Glow orbs */
+        .dc-orb1 {
+          position: absolute; top: -120px; right: -120px;
+          width: 600px; height: 600px; border-radius: 50%;
+          background: radial-gradient(circle, rgba(20,41,208,0.35) 0%, transparent 65%);
+          pointer-events: none; z-index: 0;
+        }
+        .dc-orb2 {
+          position: absolute; bottom: -80px; left: -80px;
+          width: 400px; height: 400px; border-radius: 50%;
+          background: radial-gradient(circle, rgba(14,127,221,0.25) 0%, transparent 65%);
+          pointer-events: none; z-index: 0;
         }
 
-        /* ── Two-column layout ── */
-        .cert-container {
-          max-width: 1200px; margin: 0 auto; padding: 0 40px;
-          display: grid; grid-template-columns: 1fr 1.25fr;
-          gap: 72px; align-items: center;
+        /* ── Top hero text area ── */
+        .dc-hero {
+          text-align: center;
+          padding: 5rem 5% 2.5rem;
+          position: relative; z-index: 1;
+        }
+        .dc-hero-label {
+          display: inline-flex; align-items: center; gap: 0.45rem;
+          background: rgba(255,255,255,0.1);
+          border: 1px solid rgba(255,255,255,0.2);
+          border-radius: 99px;
+          padding: 0.28rem 0.9rem 0.28rem 0.6rem;
+          font-size: 0.68rem; font-weight: 700;
+          letter-spacing: 2px; text-transform: uppercase;
+          color: rgba(255,255,255,0.85);
+          margin-bottom: 1.25rem;
+        }
+        .dc-hero-label-dot {
+          width: 6px; height: 6px; border-radius: 50%;
+          background: #BFD2FF;
+          animation: dc-blink 2s ease-in-out infinite;
+        }
+        @keyframes dc-blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+        .dc-hero-h2 {
+          font-size: clamp(2rem, 4.5vw, 3.2rem); font-weight: 900;
+          color: #fff; letter-spacing: -0.04em; line-height: 1.05;
+          margin: 0 0 1rem;
+        }
+        .dc-hero-h2 em {
+          font-style: normal;
+          background: linear-gradient(130deg, #BFD2FF 0%, #fff 50%, #93C5FD 100%);
+          -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+        .dc-hero-sub {
+          font-size: 1rem; color: rgba(255,255,255,0.65);
+          max-width: 540px; margin: 0 auto 2rem; line-height: 1.75;
+        }
+
+        /* CTA button */
+        .dc-hero-cta {
+          display: inline-flex; align-items: center; gap: 0.6rem;
+          background: #fff; color: #1429D0;
+          border: none; border-radius: 12px;
+          padding: 0.85rem 2rem;
+          font-size: 0.92rem; font-weight: 800;
+          font-family: 'DM Sans', sans-serif;
+          cursor: pointer;
+          box-shadow: 0 8px 28px rgba(0,0,0,0.3);
+          transition: all 0.22s ease;
+          letter-spacing: -0.01em;
+        }
+        .dc-hero-cta:hover {
+          background: #F2F5FF;
+          transform: translateY(-2px);
+          box-shadow: 0 14px 36px rgba(0,0,0,0.35);
+        }
+
+        /* ── CTA + stats strip ── */
+        .dc-cta-strip {
+          display: flex; flex-direction: column; align-items: center; gap: 1.5rem;
+          padding: 0 5% 3.5rem;
           position: relative; z-index: 1;
         }
 
-        /* ── Left ── */
-        .cert-left { display: flex; flex-direction: column; gap: 28px; }
-        .cert-label-row { display: flex; align-items: center; gap: 12px; }
-        .cert-label-line { width: 22px; height: 2px; background: #1429D0; border-radius: 2px; flex-shrink: 0; }
-        .cert-label { font-size: 0.72rem; font-weight: 700; color: #1429D0; letter-spacing: 2px; text-transform: uppercase; }
+        /* ── Stats strip ── */
+        .dc-stats-row {
+          display: flex; align-items: center; justify-content: center;
+          gap: 0;
+          background: rgba(255,255,255,0.07);
+          border: 1px solid rgba(255,255,255,0.12);
+          border-radius: 16px; overflow: hidden;
+          width: fit-content; margin-left: auto; margin-right: auto;
+        }
+        .dc-stat {
+          padding: 1rem 2rem; text-align: center;
+          border-right: 1px solid rgba(255,255,255,0.1);
+        }
+        .dc-stat:last-child { border-right: none; }
+        .dc-stat-n { font-size: 1.45rem; font-weight: 900; color: #fff; letter-spacing: -0.03em; line-height: 1; }
+        .dc-stat-l { font-size: 0.65rem; font-weight: 600; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.7px; margin-top: 3px; }
 
-        .cert-heading {
-          font-size: clamp(1.8rem, 3.5vw, 2.9rem); font-weight: 900;
-          color: #161619; line-height: 1.1; letter-spacing: -0.03em; margin: 0;
-        }
-        .cert-heading span {
-          color: #1429D0;
-          text-decoration: underline;
-          text-decoration-color: #BFD2FF;
-          text-decoration-thickness: 3px;
-          text-underline-offset: 5px;
-        }
-
-        .cert-desc { font-size: 1rem; color: #36383e; line-height: 1.8; margin: 0; }
-        .cert-desc strong { color: #161619; font-weight: 700; }
-
-        .cert-badges { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .cert-badge {
-          display: flex; align-items: center; gap: 10px;
-          background: #F2F5FF; border-radius: 12px; padding: 12px 15px;
-          border: 1.5px solid rgba(20,41,208,0.12); transition: all 0.22s;
-        }
-        .cert-badge:hover {
-          background: #fff; border-color: #1429D0;
-          box-shadow: 0 4px 16px rgba(20,41,208,0.10); transform: translateY(-2px);
-        }
-        .cert-badge-text { font-size: 0.8rem; font-weight: 600; color: #1429D0; }
-
-        /* ── Stats bar ── */
-        .cert-stats {
-          display: grid; grid-template-columns: repeat(4,1fr);
-          background: #fff; border-radius: 16px;
-          border: 1.5px solid rgba(20,41,208,0.10);
-          box-shadow: 0 4px 24px rgba(20,41,208,0.08); overflow: hidden;
-        }
-        .cert-stat-item {
-          display: flex; flex-direction: column; align-items: center;
-          text-align: center; padding: 22px 10px;
-          border-right: 1px solid rgba(20,41,208,0.08);
-        }
-        .cert-stat-item:last-child { border-right: none; }
-        .cert-stat-num { font-size: 1.6rem; font-weight: 900; color: #1429D0; line-height: 1; margin-bottom: 5px; letter-spacing: -0.02em; }
-        .cert-stat-lbl { font-size: 0.65rem; font-weight: 600; color: #36383e; letter-spacing: 0.05em; text-transform: uppercase; }
-
-        /* ── Right ── */
-        .cert-right {
-          position: relative;
-          display: flex; flex-direction: column; align-items: center;
-          gap: 20px; padding: 40px 0 20px;
+        /* ════════════════════════════════════
+           BOTTOM — two-column card area
+        ════════════════════════════════════ */
+        .dc-body {
+          position: relative; z-index: 1;
+          max-width: 1200px; margin: 0 auto;
+          padding: 0 5%;
+          display: grid;
+          grid-template-columns: 1.2fr 1fr;
+          gap: 2rem;
+          align-items: center;
         }
 
-        .cert-img-area {
-          width: 100%; max-width: 520px;
+        /* ── Left: certificate image slider ── */
+        .dc-left {
+          display: flex; flex-direction: column; align-items: center; gap: 1.5rem;
+        }
+
+        .dc-slider-wrap {
+          width: 100%; position: relative;
+          border-radius: 22px; overflow: hidden;
+          cursor: grab; user-select: none;
+        }
+        .dc-slider-wrap:active { cursor: grabbing; }
+
+        /* Dark frame behind cert */
+        .dc-cert-frame {
+          background: linear-gradient(145deg, #0d1024, #1a1f3c);
+          border-radius: 22px; padding: 1.75rem 1.75rem 1.25rem;
+          border: 1px solid rgba(255,255,255,0.1);
+          box-shadow:
+            0 32px 80px rgba(0,0,0,0.6),
+            0 0 0 1px rgba(255,255,255,0.06) inset;
           position: relative; overflow: hidden;
-          border-radius: 22px;
-          cursor: grab;
-          user-select: none;
         }
-        .cert-img-area:active { cursor: grabbing; }
-
-        @keyframes slideOutLeft  { from { transform: translateX(0);     opacity: 1; } to { transform: translateX(-100%); opacity: 0; } }
-        @keyframes slideOutRight { from { transform: translateX(0);     opacity: 1; } to { transform: translateX(100%);  opacity: 0; } }
-        @keyframes slideInRight  { from { transform: translateX(100%);  opacity: 0; } to { transform: translateX(0);     opacity: 1; } }
-        @keyframes slideInLeft   { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0);     opacity: 1; } }
-
-        .cert-main-card { width: 100%; }
-        .cert-main-card.cert-slide-left  { animation: slideOutLeft  0.42s cubic-bezier(.4,0,.2,1) forwards; }
-        .cert-main-card.cert-slide-right { animation: slideOutRight 0.42s cubic-bezier(.4,0,.2,1) forwards; }
-
-        .cert-incoming {
-          position: absolute; inset: 0;
+        /* Inner shine */
+        .dc-cert-frame::before {
+          content: '';
+          position: absolute; top: 0; left: 0; right: 0; height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
           pointer-events: none;
         }
-        .cert-incoming.from-right { animation: slideInRight 0.42s cubic-bezier(.4,0,.2,1) forwards; }
-        .cert-incoming.from-left  { animation: slideInLeft  0.42s cubic-bezier(.4,0,.2,1) forwards; }
 
-        .cert-card-inner {
-          position: relative; background: #fff;
-          border-radius: 22px; overflow: hidden;
-          border: 1.5px solid rgba(20,41,208,0.10);
-          box-shadow: 0 12px 48px rgba(20,41,208,0.14);
-          transition: box-shadow 0.3s;
+        .dc-cert-inner {
+          background: #fff; border-radius: 14px; overflow: hidden;
+          box-shadow: 0 8px 32px rgba(0,0,0,0.4);
         }
-        .cert-card-inner:hover { box-shadow: 0 20px 60px rgba(20,41,208,0.20); }
-
-        .cert-img {
+        .dc-cert-img {
           width: 100%; display: block;
-          object-fit: contain; padding: 20px;
-          min-height: 200px; max-height: 400px;
+          object-fit: contain; padding: 12px;
+          max-height: 500px; min-height: 260px;
         }
 
-        .cert-count-pill {
-          position: absolute; top: 14px; left: 14px;
-          background: rgba(20,41,208,0.90); color: #fff;
-          font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em;
-          padding: 4px 12px; border-radius: 100px; backdrop-filter: blur(4px);
+        /* Slide animations */
+        @keyframes dc-out-l { from{transform:translateX(0);opacity:1} to{transform:translateX(-110%);opacity:0} }
+        @keyframes dc-out-r { from{transform:translateX(0);opacity:1} to{transform:translateX(110%);opacity:0} }
+        @keyframes dc-in-r  { from{transform:translateX(110%);opacity:0} to{transform:translateX(0);opacity:1} }
+        @keyframes dc-in-l  { from{transform:translateX(-110%);opacity:0} to{transform:translateX(0);opacity:1} }
+
+        .dc-slide-main               { width: 100%; }
+        .dc-slide-main.anim-left     { animation: dc-out-l 0.4s cubic-bezier(.4,0,.2,1) forwards; }
+        .dc-slide-main.anim-right    { animation: dc-out-r 0.4s cubic-bezier(.4,0,.2,1) forwards; }
+        .dc-slide-incoming           { position: absolute; inset: 0; pointer-events: none; }
+        .dc-slide-incoming.from-right{ animation: dc-in-r 0.4s cubic-bezier(.4,0,.2,1) forwards; }
+        .dc-slide-incoming.from-left { animation: dc-in-l 0.4s cubic-bezier(.4,0,.2,1) forwards; }
+
+        /* Count badge on cert */
+        .dc-count-pill {
+          position: absolute; top: 22px; left: 22px;
+          background: rgba(20,41,208,0.88); color: #fff; backdrop-filter: blur(4px);
+          font-size: 0.65rem; font-weight: 800; letter-spacing: 0.1em;
+          padding: 3px 11px; border-radius: 99px;
         }
 
-        .cert-drag-hint {
-          position: absolute; inset: 0; border-radius: 22px;
-          display: flex; align-items: center; justify-content: space-between;
-          padding: 0 16px; pointer-events: none; opacity: 0;
-          transition: opacity 0.2s;
+        /* Trust badges row */
+        .dc-trust-row {
+          display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; justify-content: center;
         }
-        .cert-img-area:hover .cert-drag-hint { opacity: 1; }
-        .cert-drag-arrow {
-          width: 36px; height: 36px; border-radius: 50%;
-          background: rgba(20,41,208,0.75); backdrop-filter: blur(4px);
-          display: flex; align-items: center; justify-content: center;
+        .dc-trust-pill {
+          display: inline-flex; align-items: center; gap: 0.35rem;
+          background: rgba(255,255,255,0.08);
+          border: 1px solid rgba(255,255,255,0.14);
+          border-radius: 99px; padding: 0.3rem 0.85rem;
+          font-size: 0.72rem; font-weight: 600; color: rgba(255,255,255,0.8);
+          transition: all 0.18s;
+        }
+        .dc-trust-pill:hover {
+          background: rgba(255,255,255,0.14);
+          border-color: rgba(255,255,255,0.25);
           color: #fff;
         }
 
-        .cert-nav-row {
-          display: flex; align-items: center; gap: 16px; z-index: 10;
+        /* Nav row */
+        .dc-nav {
+          display: flex; align-items: center; gap: 1rem;
         }
-        .cert-nav-btn {
+        .dc-nav-btn {
           width: 46px; height: 46px; border-radius: 50%;
-          border: 1.5px solid rgba(20,41,208,0.20);
-          background: #fff; color: #1429D0;
+          border: 1.5px solid rgba(255,255,255,0.2);
+          background: rgba(255,255,255,0.08);
+          color: #fff;
           display: flex; align-items: center; justify-content: center;
-          cursor: pointer; padding: 0; transition: all 0.22s ease;
-          box-shadow: 0 4px 12px rgba(20,41,208,0.08);
+          cursor: pointer; padding: 0; transition: all 0.22s;
+          backdrop-filter: blur(8px);
           -webkit-tap-highlight-color: transparent;
         }
-        .cert-nav-btn:hover {
-          background: #1429D0; border-color: #1429D0; color: #fff;
-          box-shadow: 0 8px 24px rgba(20,41,208,0.30);
+        .dc-nav-btn:hover {
+          background: #1429D0; border-color: #1429D0;
+          box-shadow: 0 8px 24px rgba(20,41,208,0.5);
+          transform: translateY(-1px);
         }
-        .cert-dots { display: flex; align-items: center; gap: 6px; }
-        .cert-dot {
+        .dc-dots { display: flex; gap: 6px; align-items: center; }
+        .dc-dot {
           height: 8px; border-radius: 4px; border: none;
-          cursor: pointer; padding: 0; transition: all 0.3s ease;
+          cursor: pointer; padding: 0; transition: all 0.3s;
           -webkit-tap-highlight-color: transparent;
         }
-        .cert-dot.active  { width: 24px; background: #1429D0; }
-        .cert-dot:not(.active) { width: 8px; background: #BFD2FF; }
+        .dc-dot.on  { width: 24px; background: #fff; }
+        .dc-dot.off { width: 8px;  background: rgba(255,255,255,0.3); }
 
-        /* Floating badges */
-        .cert-float-badge {
-          position: absolute; background: #fff; border-radius: 14px;
-          padding: 10px 15px; display: flex; align-items: center; gap: 10px;
-          box-shadow: 0 8px 32px rgba(20,41,208,0.13);
-          border: 1px solid rgba(20,41,208,0.10); z-index: 20;
-          white-space: nowrap;
+        /* ── Right: info panel ── */
+        .dc-right {
+          background: rgba(255,255,255,0.06);
+          border: 1px solid rgba(255,255,255,0.12);
+          border-radius: 24px;
+          padding: 2.5rem;
+          backdrop-filter: blur(20px);
+          position: relative; overflow: hidden;
+          box-shadow: 0 24px 64px rgba(0,0,0,0.3);
         }
-        .cert-float-badge.top-right    { top: 0; right: -10px; }
-        .cert-float-badge.bottom-left  { bottom: 56px; left: -10px; }
-        .cert-float-title { font-size: 0.82rem; font-weight: 700; color: #161619; }
-        .cert-float-sub   { font-size: 0.7rem; color: #36383e; }
-
-        /* ── Tablet (≤1024px): stack columns ── */
-        @media (max-width: 1024px) {
-          .cert-container {
-            grid-template-columns: 1fr;
-            gap: 48px;
-            padding: 0 32px;
-          }
-          .cert-right { padding-top: 20px; }
-          .cert-float-badge.top-right  { right: 0; top: 8px; }
-          .cert-float-badge.bottom-left { left: 0; }
+        .dc-right::before {
+          content: '';
+          position: absolute; top: 0; left: 0; right: 0; height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
         }
 
-        /* ── Small tablet / large phone (≤768px) ── */
-        @media (max-width: 768px) {
-          .cert-section { padding: 70px 0; }
-          .cert-container { padding: 0 20px; gap: 36px; }
-          /* Stats: 2x2 grid */
-          .cert-stats { grid-template-columns: repeat(2, 1fr); }
-          .cert-stat-item:nth-child(2) { border-right: none; }
-          .cert-stat-item:nth-child(3),
-          .cert-stat-item:nth-child(4) { border-top: 1px solid rgba(20,41,208,0.08); }
-          /* Floating badges tucked in */
-          .cert-float-badge { padding: 8px 12px; }
-          .cert-float-title { font-size: 0.75rem; }
-          .cert-float-sub   { font-size: 0.65rem; }
+        /* Large ghost number */
+        .dc-ghost-num {
+          font-size: 8rem; font-weight: 900; letter-spacing: -0.06em;
+          color: rgba(255,255,255,0.04); line-height: 1;
+          position: absolute; top: -10px; right: 16px;
+          pointer-events: none; user-select: none;
         }
 
-        /* ── Mobile (≤600px) ── */
+        .dc-info-tag {
+          display: inline-flex; align-items: center; gap: 0.35rem;
+          background: rgba(20,41,208,0.4);
+          border: 1px solid rgba(20,41,208,0.6);
+          border-radius: 99px; padding: 0.22rem 0.75rem;
+          font-size: 0.65rem; font-weight: 700;
+          color: #BFD2FF; letter-spacing: 0.06em; text-transform: uppercase;
+          margin-bottom: 1.1rem;
+        }
+        .dc-info-tag-dot { width: 5px; height: 5px; border-radius: 50%; background: #BFD2FF; }
+
+        .dc-info-title {
+          font-size: clamp(1.4rem, 2.5vw, 1.9rem); font-weight: 900;
+          color: #fff; letter-spacing: -0.03em; line-height: 1.15;
+          margin-bottom: 1rem; position: relative; z-index: 1;
+          transition: opacity 0.3s;
+        }
+        .dc-info-desc {
+          font-size: 0.92rem; color: rgba(255,255,255,0.65);
+          line-height: 1.8; margin-bottom: 1.5rem;
+          position: relative; z-index: 1;
+          transition: opacity 0.3s;
+        }
+
+        /* Issuer row */
+        .dc-issuer {
+          display: flex; align-items: center; gap: 0.6rem;
+          margin-bottom: 1.25rem;
+        }
+        .dc-issuer-icon {
+          width: 32px; height: 32px; border-radius: 8px;
+          background: rgba(255,255,255,0.1);
+          border: 1px solid rgba(255,255,255,0.15);
+          display: flex; align-items: center; justify-content: center;
+          flex-shrink: 0;
+        }
+        .dc-issuer-label { font-size: 0.72rem; color: rgba(255,255,255,0.45); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .dc-issuer-name  { font-size: 0.85rem; color: #fff; font-weight: 700; }
+
+        /* Skills */
+        .dc-skills {
+          display: flex; flex-wrap: wrap; gap: 0.5rem;
+          margin-bottom: 1.75rem;
+        }
+        .dc-skill {
+          font-size: 0.74rem; font-weight: 600;
+          padding: 0.32rem 0.75rem; border-radius: 8px;
+          background: rgba(255,255,255,0.08);
+          border: 1px solid rgba(255,255,255,0.14);
+          color: rgba(255,255,255,0.8);
+          transition: all 0.18s;
+        }
+        .dc-skill:hover {
+          background: rgba(20,41,208,0.4);
+          border-color: rgba(20,41,208,0.6);
+          color: #fff;
+        }
+
+        /* Divider */
+        .dc-info-divider {
+          height: 1px;
+          background: rgba(255,255,255,0.08);
+          margin-bottom: 1.25rem;
+        }
+
+        /* Verification row */
+        .dc-verify-row {
+          display: flex; align-items: center; gap: 0.85rem; flex-wrap: wrap;
+        }
+        .dc-verify-item {
+          display: flex; align-items: center; gap: 0.4rem;
+          font-size: 0.75rem; font-weight: 600; color: rgba(255,255,255,0.6);
+        }
+        .dc-verify-item svg { color: #BFD2FF; }
+
+        /* ── Responsive ── */
+        @media (max-width: 960px) {
+          .dc-body { grid-template-columns: 1fr; gap: 2.5rem; }
+          .dc-right { order: -1; }
+          .dc-ghost-num { font-size: 5rem; }
+        }
         @media (max-width: 600px) {
-          .cert-section { padding: 56px 0; }
-          .cert-container { padding: 0 16px; }
-          /* Badges: single column */
-          .cert-badges { grid-template-columns: 1fr; gap: 10px; }
-          .cert-badge { padding: 10px 12px; }
-          /* Stats tighter */
-          .cert-stat-item { padding: 16px 8px; }
-          .cert-stat-num  { font-size: 1.3rem; }
-          .cert-stat-lbl  { font-size: 0.6rem; }
-          /* Floating badges: hide on very small screens to avoid overlap */
-          .cert-float-badge.top-right  { top: 4px; right: 4px; }
-          .cert-float-badge.bottom-left { bottom: 66px; left: 4px; }
-          /* Image min-height shorter on small screens */
-          .cert-img { min-height: 160px; padding: 14px; }
-        }
-
-        /* ── Very small phones (≤380px) ── */
-        @media (max-width: 380px) {
-          /* Hide floating badges on tiny screens — they overlap the image */
-          .cert-float-badge { display: none; }
-          .cert-stat-num { font-size: 1.15rem; }
+          .dc-hero { padding: 4rem 4% 3rem; }
+          .dc-body { padding: 0 4%; }
+          .dc-stats-row { gap: 0; }
+          .dc-stat { padding: 0.85rem 1.2rem; }
+          .dc-stat-n { font-size: 1.2rem; }
+          .dc-right { padding: 1.75rem; }
+          .dc-trust-row { gap: 0.45rem; }
+          .dc-hero-cta { width: 100%; justify-content: center; max-width: 320px; }
         }
       `}</style>
 
-      <section className="cert-section">
-        <div className="cert-blob-tr" />
-        <div className="cert-blob-bl" />
+      <section className="dc">
+        <div className="dc-grid-lines" />
+        <div className="dc-orb1" />
+        <div className="dc-orb2" />
 
-        <div className="cert-container">
+        {/* ── Hero ── */}
+        <div className="dc-hero">
+          <div className="dc-hero-label">
+            <span className="dc-hero-label-dot" />
+            Certification
+          </div>
 
-          {/* ── LEFT ── */}
-          <div className="cert-left">
-            <div className="cert-label-row">
-              <span className="cert-label-line" />
-              <span className="cert-label">Industry-Recognized Credentials</span>
+          <h2 className="dc-hero-h2">
+            Dual Certification<br />
+            <em>Program</em>
+          </h2>
+
+          <p className="dc-hero-sub">
+            Complete the certification stack companies actually ask for.
+            Two certifications that together fulfil what hiring managers
+            and clients look for.
+          </p>
+
+        </div>
+
+        {/* ── CTA + Stats strip — between hero and body ── */}
+        <div className="dc-cta-strip">
+          <button className="dc-hero-cta">
+            Know What Companies Ask For →
+          </button>
+          <div className="dc-stats-row">
+            {stats.map((s, i) => (
+              <div key={i} className="dc-stat">
+                <div className="dc-stat-n">{s.n}</div>
+                <div className="dc-stat-l">{s.l}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── Body ── */}
+        <div className="dc-body">
+
+          {/* Left — slider */}
+          <div className="dc-left">
+
+            <div
+              className="dc-slider-wrap"
+              onMouseDown={onMouseDown}
+              onMouseUp={onMouseUp}
+              onMouseLeave={() => { dragX.current = null; }}
+              onTouchStart={onTouchStart}
+              onTouchEnd={onTouchEnd}
+            >
+              <div className="dc-cert-frame">
+                {/* Current */}
+                <div
+                  key={`main-${active}`}
+                  className={`dc-slide-main${dir === 'left' ? ' anim-left' : dir === 'right' ? ' anim-right' : ''}`}
+                >
+                  <div className="dc-cert-inner">
+                    <img src={certsData[active].img} alt={certsData[active].title} className="dc-cert-img" draggable={false} />
+                  </div>
+                </div>
+
+                {/* Incoming */}
+                {animating && (
+                  <div className={`dc-slide-incoming ${dir === 'left' ? 'from-right' : 'from-left'}`}>
+                    <div className="dc-cert-frame" style={{ position: 'static', boxShadow: 'none', border: 'none', padding: 0 }}>
+                      <div className="dc-cert-inner">
+                        <img src={certsData[nextIdx].img} alt="" className="dc-cert-img" draggable={false} />
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <div className="dc-count-pill">{active + 1} / {certsData.length}</div>
+              </div>
             </div>
 
-            <h2 className="cert-heading">
-              Earn Certificates<br />
-              That <span>Actually Matter</span>
-            </h2>
-
-            <p className="cert-desc">
-              Not just paper credentials. Our certifications are recognized by{' '}
-              <strong>400+ hiring partners</strong> and validate the skills that
-              top employers are actively searching for.
-            </p>
-
-            <div className="cert-badges">
-              {badges.map((b, i) => {
-                const Icon = b.icon;
+            {/* Trust pills */}
+            <div className="dc-trust-row">
+              {trust.map((t, i) => {
+                const Icon = t.icon;
                 return (
-                  <div key={i} className="cert-badge">
-                    <Icon size={17} color="#1429D0" />
-                    <span className="cert-badge-text">{b.title}</span>
+                  <div key={i} className="dc-trust-pill">
+                    {typeof Icon === 'function' && Icon.length === 0
+                      ? <Icon size={13} />
+                      : <Icon size={13} />
+                    }
+                    {t.text}
                   </div>
                 );
               })}
             </div>
 
-            <div className="cert-stats">
-              {stats.map((s, i) => (
-                <div key={i} className="cert-stat-item">
-                  <div className="cert-stat-num">{s.number}</div>
-                  <div className="cert-stat-lbl">{s.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* ── RIGHT ── */}
-          <div className="cert-right">
-
-            <div className="cert-float-badge top-right">
-              <CheckCircle size={20} color="#fff" style={{ background: "#10B981", borderRadius: "50%", flexShrink: 0 }} />
-              <div>
-                <div className="cert-float-title">Verified Credential</div>
-                <div className="cert-float-sub">Digitally Secured</div>
-              </div>
-            </div>
-
-            <div
-              className="cert-img-area"
-              onMouseDown={onMouseDown}
-              onMouseMove={onMouseMove}
-              onMouseUp={onMouseUp}
-              onMouseLeave={onMouseLeave}
-              onTouchStart={onTouchStart}
-              onTouchEnd={onTouchEnd}
-            >
-              <div key={`main-${activeIndex}`} className={`cert-main-card ${animClass}`}>
-                <div className="cert-card-inner">
-                  <img src={certificates[activeIndex]} alt={`Certificate ${activeIndex + 1}`} className="cert-img" draggable={false} />
-                  <div className="cert-count-pill">{activeIndex + 1} / {certificates.length}</div>
-                </div>
-              </div>
-
-              {animating && (
-                <div className={`cert-incoming ${direction === 'left' ? 'from-right' : 'from-left'}`}>
-                  <div className="cert-card-inner">
-                    <img
-                      src={certificates[direction === 'left'
-                        ? (activeIndex + 1) % certificates.length
-                        : (activeIndex - 1 + certificates.length) % certificates.length]}
-                      alt="Next certificate"
-                      className="cert-img"
-                      draggable={false}
-                    />
-                  </div>
-                </div>
-              )}
-
-              <div className="cert-drag-hint">
-                <div className="cert-drag-arrow"><ChevronLeft size={18} /></div>
-                <div className="cert-drag-arrow"><ChevronRight size={18} /></div>
-              </div>
-            </div>
-
-            <div className="cert-nav-row">
-              <button className="cert-nav-btn" onClick={prevCert} aria-label="Previous certificate">
-                <ChevronLeft size={20} />
+            {/* Nav */}
+            <div className="dc-nav">
+              <button className="dc-nav-btn" onClick={prev} aria-label="Previous">
+                <ChevronLeft size={19} />
               </button>
-
-              <div className="cert-dots">
-                {certificates.map((_, i) => (
+              <div className="dc-dots">
+                {certsData.map((_, i) => (
                   <button
                     key={i}
-                    className={`cert-dot${i === activeIndex ? ' active' : ''}`}
-                    onClick={() => {
-                      if (i === activeIndex || animating) return;
-                      setDirection(i > activeIndex ? 'left' : 'right');
-                      setAnimating(true);
-                      setTimeout(() => { setActiveIndex(i); setAnimating(false); setDirection(null); }, 420);
-                    }}
-                    aria-label={`Go to certificate ${i + 1}`}
+                    className={`dc-dot ${i === active ? 'on' : 'off'}`}
+                    onClick={() => go(i, i > active ? 'left' : 'right')}
+                    aria-label={`Certificate ${i + 1}`}
                   />
                 ))}
               </div>
-
-              <button className="cert-nav-btn" onClick={nextCert} aria-label="Next certificate">
-                <ChevronRight size={20} />
+              <button className="dc-nav-btn" onClick={next} aria-label="Next">
+                <ChevronRight size={19} />
               </button>
             </div>
+          </div>
 
-            <div className="cert-float-badge bottom-left">
-              <LinkedInIcon size={22} />
+          {/* Right — info panel */}
+          <div className="dc-right">
+            <div className="dc-ghost-num">{cert.num}</div>
+
+            <div className="dc-info-tag">
+              <span className="dc-info-tag-dot" />
+              {cert.tag}
+            </div>
+
+            <h3 className="dc-info-title">{cert.title}</h3>
+
+            <p className="dc-info-desc">{cert.desc}</p>
+
+            {/* Issuer */}
+            <div className="dc-issuer">
+              <div className="dc-issuer-icon">
+                {cert.issuer.includes('Microsoft') ? <MicrosoftIcon size={16} /> : <CheckCircle size={14} color="#BFD2FF" />}
+              </div>
               <div>
-                <div className="cert-float-title">LinkedIn Ready</div>
-                <div className="cert-float-sub">Share Instantly</div>
+                <div className="dc-issuer-label">Issued by</div>
+                <div className="dc-issuer-name">{cert.issuer}</div>
               </div>
             </div>
 
+            {/* Skills */}
+            <div className="dc-skills">
+              {cert.skills.map((s, i) => (
+                <span key={i} className="dc-skill">{s}</span>
+              ))}
+            </div>
+
+            <div className="dc-info-divider" />
+
+            {/* Verify row */}
+            <div className="dc-verify-row">
+              <div className="dc-verify-item"><CheckCircle size={13} /> Digitally Verified</div>
+              <div className="dc-verify-item"><Globe size={13} /> Globally Accepted</div>
+              <div className="dc-verify-item"><LinkedInIcon size={13} /> LinkedIn Ready</div>
+            </div>
           </div>
+
         </div>
       </section>
     </>
